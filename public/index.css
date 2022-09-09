@@ -5,3 +5,60 @@
   width: 540px;
   height: 540px;
 }
+
+#button-container {
+	width: 100%;
+	text-align: center;
+}
+
+
+#algorithm-buttons {
+	width: 100%;
+	text-align: center;
+}
+
+#algorithm-menu {
+	background-color: white;
+	color: black;
+	border: 2px solid #343A40;
+	padding-top: 16px;
+	padding-bottom: 16px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	border-radius: 4px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+#algorithm-menu:hover {
+	background-color: #343A40;
+    color: white;	
+	
+}
+
+.button {
+	background-color: white;
+	color: black;
+	border: 2px solid #343A40;
+	text-align: center;
+	padding: 16px 32px; 
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	border-radius: 4px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.button-paused {
+	background-color: #343A40;
+	color: white;
+}
+
+.button:hover {
+	background-color: #343A40;
+    color: white;	
+}
