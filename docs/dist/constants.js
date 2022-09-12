@@ -6,3 +6,6 @@ export const CANVAS_WIDTH = CANVAS.width;
 export const CANVAS_HEIGHT = CANVAS.height;
 export const DELAY = 100;
 export const CELL_WIDTH = 40;
+export const GRID_WIDTH = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
+export const GRID_HEIGHT = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
+export const DEFAULT_STARTEND_HEIGHT = Math.floor(GRID_WIDTH / 2) - 1;
