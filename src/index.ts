@@ -60,3 +60,27 @@ console.log(grid)
 console.log(cons.CTX)
 updateCanvas(grid, cons.CTX)
 console.log("Grid", grid)
+
+const gen = depthFirstSearch(grid, start)
+let isRunning = true
+console.log(gen)
+
+while (isRunning) {
+  let res = gen.next()
+  let val = res.value
+  let done = res.done
+
+  if (done) {
+    isRunning = false
+  }
+}
+
+
+// for (let i=0; i <= 159; i++) {
+//   const new_grid = gen.next()
+//   console.log(new_grid)
+//   // updateCanvas(new_grid, cons.CTX)
+// }
+
+updateCanvas(grid, cons.CTX)
+console.log(gen)
