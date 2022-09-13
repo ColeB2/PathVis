@@ -1,8 +1,5 @@
 import * as cons from "./constants.js";
 import {depthFirstSearch} from "./algorithms.js";
-const grid = [];
-const start = [1, cons.DEFAULT_STARTEND_HEIGHT];
-const end = [cons.GRID_WIDTH - 2, cons.DEFAULT_STARTEND_HEIGHT];
 function updateCanvas(arr, context) {
   context.clearRect(0, 0, cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT);
   console.log("updateCanvas");
@@ -26,34 +23,97 @@ function createGrid() {
     let row = [];
     for (let j = 0; j < cons.GRID_WIDTH; j++) {
       console.log(i);
-      if (j == start[0] && i == start[1]) {
+      if (j == myGlobal.start[0] && i == myGlobal.start[1]) {
         row.push(2);
-      } else if (j == end[0] && i == end[1]) {
+      } else if (j == myGlobal.end[0] && i == myGlobal.end[1]) {
         row.push(3);
       } else {
         row.push(0);
       }
     }
-    grid.push(row);
+    myGlobal.grid.push(row);
   }
 }
-function drawGrid() {
+function clearGrid() {
+  myGlobal.grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (col === 2 || col === 3) {
+      } else {
+        myGlobal.grid[r][c] = 0;
+      }
+    });
+  });
 }
+function reset() {
+  clearGrid();
+  myGlobal.isRunning = false;
+  myGlobal.generatorAlgo = null;
+  myGlobal.algoSelected = false;
+  pauseButton.innerText = "Start";
+  pauseButton.classList.remove("button-paused");
+  updateCanvas(myGlobal.grid, cons.CTX);
+}
+const resetButton = document.getElementById("reset");
+resetButton?.addEventListener("click", reset, false);
+function pauseLoop() {
+  if (myGlobal.isRunning) {
+    pauseButton.innerText = "Start";
+    pauseButton.classList.remove("button-paused");
+  } else {
+    pauseButton.innerText = "Pause";
+    pauseButton.classList.add("button-paused");
+    algorithmSelectFunction();
+  }
+  myGlobal.isRunning = !myGlobal.isRunning;
+  mainLoop();
+}
+const pauseButton = document.getElementById("pause");
+pauseButton?.addEventListener("click", pauseLoop, false);
+function selectAlgo(algo, grid) {
+  if (algo) {
+    myGlobal.generatorAlgo = algo(grid, myGlobal.start);
+  }
+}
+const algoDict = {
+  depthFirstSearch
+};
+const algorithmSelectMenu = document.getElementById("algorithm-menu");
+function algorithmSelectFunction() {
+  let option = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value];
+  if (myGlobal.algoSelected === false || option != myGlobal.algoSelected) {
+    myGlobal.algoSelected = option;
+    selectAlgo(myGlobal.algoSelected, myGlobal.grid);
+  }
+}
+function mainLoop() {
+  function main() {
+    if (myGlobal.isRunning) {
+      if (myGlobal.generatorAlgo !== null) {
+        let algoResults = myGlobal.generatorAlgo.next();
+        let newGrid = algoResults["value"];
+        console.log(algoResults);
+        if (!algoResults.done) {
+          updateCanvas(newGrid, cons.CTX);
+          setTimeout(() => {
+            window.requestAnimationFrame(main);
+          }, 1e3);
+        } else {
+          myGlobal.generatorAlgo = null;
+          myGlobal.algoSelected = false;
+          pauseLoop();
+        }
+      }
+    }
+  }
+  window.requestAnimationFrame(main);
+}
+var myGlobal = {};
+myGlobal.grid = [];
+myGlobal.start = cons.DEFAULT_START;
+myGlobal.end = cons.DEFAULT_END;
+myGlobal.isRunning = false;
+myGlobal.generatorAlgo = null;
+myGlobal.algoSelected = false;
 createGrid();
-console.log(grid);
-console.log(cons.CTX);
-updateCanvas(grid, cons.CTX);
-console.log("Grid", grid);
-const gen = depthFirstSearch(grid, start);
-let isRunning = true;
-console.log(gen);
-while (isRunning) {
-  let res = gen.next();
-  let val = res.value;
-  let done = res.done;
-  if (done) {
-    isRunning = false;
-  }
-}
-updateCanvas(grid, cons.CTX);
-console.log(gen);
+updateCanvas(myGlobal.grid, cons.CTX);
+mainLoop();

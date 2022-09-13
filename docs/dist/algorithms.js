@@ -6,6 +6,8 @@ function inBounds(x, y) {
   return false;
 }
 export function* depthFirstSearch(grid, start) {
+  console.log("DFS START:", start);
+  console.log("grid:", grid);
   const stack = [start];
   const DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
   while (stack.length !== 0) {
