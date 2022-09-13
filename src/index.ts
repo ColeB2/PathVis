@@ -49,8 +49,8 @@ function createGrid() {
 }
 
 function clearGrid() {
-  myGlobal.grid.forEach( (row, r) => {
-    row.forEach( (col, c) => {
+  myGlobal.grid.forEach( (row : [], r : number) => {
+    row.forEach( (col: number, c: number) => {
       if (col === 2 || col === 3) {
       } else {
         myGlobal.grid[r][c] = 0
