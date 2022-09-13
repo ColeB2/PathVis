@@ -8,6 +8,8 @@ function inBounds(x: number, y: number) {
 }
 
 export function* depthFirstSearch(grid: number[][], start: number[]) {
+    console.log("DFS START:", start)
+    console.log("grid:", grid)
     const stack: number[][] = [start]
     // const DIRS: number[][] = [[1,0], [0,1], [-1,0], [0,-1]]
     const DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]

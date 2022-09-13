@@ -5,9 +5,7 @@ import { depthFirstSearch } from './algorithms';
 
 
 
-const grid: number[][] = [];
-const start: number[] = [1, cons.DEFAULT_STARTEND_HEIGHT]
-const end: number[] = [cons.GRID_WIDTH-2, cons.DEFAULT_STARTEND_HEIGHT]
+
 
 
 function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
@@ -38,21 +36,41 @@ function createGrid() {
     let row: number[] = []
     for (let j=0; j < cons.GRID_WIDTH; j++) {
       console.log(i)
-      if (j == start[0] && i == start[1]){
+      if (j == myGlobal.start[0] && i == myGlobal.start[1]){
         row.push(2)
-      } else if (j == end[0] && i == end[1]) {
+      } else if (j == myGlobal.end[0] && i == myGlobal.end[1]) {
         row.push(3)
       } else {
         row.push(0)
       }
     }
-    grid.push(row)
+    myGlobal.grid.push(row)
   }
 }
 
-function drawGrid() {
-
+function clearGrid() {
+  myGlobal.grid.forEach( (row, r) => {
+    row.forEach( (col, c) => {
+      if (col === 2 || col === 3) {
+      } else {
+        myGlobal.grid[r][c] = 0
+      }
+    })
+  })
 }
+
+function reset() {
+  clearGrid()
+  myGlobal.isRunning = false;
+  myGlobal.generatorAlgo = null;
+  myGlobal.algoSelected = false;
+  pauseButton.innerText = 'Start'
+  pauseButton.classList.remove('button-paused')
+  updateCanvas(myGlobal.grid, cons.CTX)
+}
+
+const resetButton: any = document.getElementById('reset') // any?
+resetButton?.addEventListener('click', reset, false)
 
 function pauseLoop() {
   if (myGlobal.isRunning) {
@@ -73,7 +91,7 @@ pauseButton?.addEventListener('click', pauseLoop, false)
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
-	myGlobal.generatorAlgo = algo(grid, start)
+	myGlobal.generatorAlgo = algo(grid, myGlobal.start)
 	}
 }
 
@@ -126,6 +144,10 @@ interface myGlobalVariables {
   [key: string]: any
 }
 var myGlobal: myGlobalVariables = {};
+myGlobal.grid = [];
+myGlobal.start = cons.DEFAULT_START
+myGlobal.end = cons.DEFAULT_END
+
 
 myGlobal.isRunning = false;
 myGlobal.generatorAlgo = null;
@@ -135,5 +157,5 @@ myGlobal.algoSelected = false;
 
 
 createGrid()
-updateCanvas(grid, cons.CTX)
+updateCanvas(myGlobal.grid, cons.CTX)
 mainLoop();
