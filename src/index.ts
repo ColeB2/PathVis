@@ -54,33 +54,86 @@ function drawGrid() {
 
 }
 
-
-createGrid()
-console.log(grid)
-console.log(cons.CTX)
-updateCanvas(grid, cons.CTX)
-console.log("Grid", grid)
-
-const gen = depthFirstSearch(grid, start)
-let isRunning = true
-console.log(gen)
-
-while (isRunning) {
-  let res = gen.next()
-  let val = res.value
-  let done = res.done
-
-  if (done) {
-    isRunning = false
+function pauseLoop() {
+  if (myGlobal.isRunning) {
+    pauseButton.innerText = 'Start';
+    pauseButton.classList.remove('button-paused');
+  } else {
+    pauseButton.innerText = 'Pause';
+    pauseButton.classList.add('button-paused');
+    algorithmSelectFunction();
   }
+  myGlobal.isRunning = !myGlobal.isRunning;
+  mainLoop();
+}
+
+const pauseButton: any  = document.getElementById('pause') // any?
+pauseButton?.addEventListener('click', pauseLoop, false)
+
+
+function selectAlgo(algo: any, grid: number[][]) {
+	if (algo) {
+	myGlobal.generatorAlgo = algo(grid, start)
+	}
+}
+
+const algoDict:any = {
+  "depthFirstSearch": depthFirstSearch,
 }
 
 
-// for (let i=0; i <= 159; i++) {
-//   const new_grid = gen.next()
-//   console.log(new_grid)
-//   // updateCanvas(new_grid, cons.CTX)
-// }
+const algorithmSelectMenu:any = document.getElementById('algorithm-menu') //any
+function algorithmSelectFunction () {
+  let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
+  if (myGlobal.algoSelected === false || option != myGlobal.algoSelected) {
+    myGlobal.algoSelected = option
+    selectAlgo(myGlobal.algoSelected, myGlobal.grid)
+  }
+}
 
+function mainLoop() {
+  function main() {
+    if (myGlobal.isRunning) {
+      if (myGlobal.generatorAlgo !== null) {
+        let algoResults = myGlobal.generatorAlgo.next()
+        let newGrid = algoResults['value']
+        console.log(algoResults)
+
+        if (!algoResults.done) {
+          updateCanvas(newGrid, cons.CTX)
+          setTimeout ( () => {
+            window.requestAnimationFrame(main);
+          }, 1000)
+
+        } else {
+          myGlobal.generatorAlgo = null;
+          myGlobal.algoSelected = false;
+          pauseLoop();
+        }
+
+      }
+      
+    }
+  }
+  window.requestAnimationFrame(main);
+}
+
+
+
+
+//GLOBAL VARIABLES
+interface myGlobalVariables {
+  [key: string]: any
+}
+var myGlobal: myGlobalVariables = {};
+
+myGlobal.isRunning = false;
+myGlobal.generatorAlgo = null;
+// myGlobal.generatorAlgo = depthFirstSearch(grid, start);
+myGlobal.algoSelected = false;
+// myGlobal.algoSelected = true;
+
+
+createGrid()
 updateCanvas(grid, cons.CTX)
-console.log(gen)
+mainLoop();
