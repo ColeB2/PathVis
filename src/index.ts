@@ -89,6 +89,18 @@ const pauseButton: any  = document.getElementById('pause') // any?
 pauseButton?.addEventListener('click', pauseLoop, false)
 
 
+function changeSlider(event:any) {
+  delaySliderOutput.innerHTML = delaySlider.value
+  myGlobal.delayOutput = delaySlider.value;
+}
+
+const delaySlider: any = document.getElementById("delayRange")
+const delaySliderOutput: any = document.getElementById("delayValue")
+delaySliderOutput.innerHTML = delaySlider.value;
+delaySlider.addEventListener('input', changeSlider, false)
+
+
+
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
 	myGlobal.generatorAlgo = algo(grid, myGlobal.start)
@@ -121,7 +133,7 @@ function mainLoop() {
           updateCanvas(newGrid, cons.CTX)
           setTimeout ( () => {
             window.requestAnimationFrame(main);
-          }, 1000)
+          }, myGlobal.delayOutput)
 
         } else {
           myGlobal.generatorAlgo = null;
@@ -151,9 +163,9 @@ myGlobal.end = cons.DEFAULT_END
 
 myGlobal.isRunning = false;
 myGlobal.generatorAlgo = null;
-// myGlobal.generatorAlgo = depthFirstSearch(grid, start);
 myGlobal.algoSelected = false;
-// myGlobal.algoSelected = true;
+
+myGlobal.delayOutput = delaySlider.value;
 
 
 createGrid()
