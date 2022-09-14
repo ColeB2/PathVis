@@ -1,16 +1,4 @@
 
-
-// class ListNode {
-//     val: number | null;
-//     next: ListNode | null;
-
-//     constructor(val: number | null = null, next: ListNode | null = null) {
-//         this.val = val;
-//         this.next = next;
-
-//     }
-// }
-
 class ListNode<T> {
     constructor(public val: T, public next: ListNode<T> | null) {}
 }
