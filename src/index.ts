@@ -1,5 +1,5 @@
 import * as cons from './constants';
-import { depthFirstSearch } from './algorithms';
+import { breadthFirstSearch, depthFirstSearch } from './algorithms';
 
 
 
@@ -109,6 +109,7 @@ function selectAlgo(algo: any, grid: number[][]) {
 
 const algoDict:any = {
   "depthFirstSearch": depthFirstSearch,
+  "breadthFirstSearch": breadthFirstSearch,
 }
 
 
