@@ -89,9 +89,9 @@ const pauseButton: any  = document.getElementById('pause') // any?
 pauseButton?.addEventListener('click', pauseLoop, false)
 
 
-function changeSlider(event:any) {
+function changeSlider() {
   delaySliderOutput.innerHTML = delaySlider.value
-  myGlobal.delayOutput = delaySlider.value;
+  myGlobal.delay = delaySlider.value;
 }
 
 const delaySlider: any = document.getElementById("delayRange")
@@ -133,7 +133,7 @@ function mainLoop() {
           updateCanvas(newGrid, cons.CTX)
           setTimeout ( () => {
             window.requestAnimationFrame(main);
-          }, myGlobal.delayOutput)
+          }, myGlobal.delay)
 
         } else {
           myGlobal.generatorAlgo = null;
@@ -165,7 +165,7 @@ myGlobal.isRunning = false;
 myGlobal.generatorAlgo = null;
 myGlobal.algoSelected = false;
 
-myGlobal.delayOutput = delaySlider.value;
+myGlobal.delay = delaySlider.value;
 
 
 createGrid()
