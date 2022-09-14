@@ -10,9 +10,7 @@ import { breadthFirstSearch, depthFirstSearch } from './algorithms';
 
 function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
   context.clearRect(0,0,cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT)
-  console.log("updateCanvas")
   arr.forEach((row, r) => {
-    console.log(row)
     row.forEach((col, c) => {
       if (arr[r][c] == 1) {
         context.fillStyle = "black"
@@ -35,7 +33,6 @@ function createGrid() {
   for (let i=0; i < cons.GRID_HEIGHT; i++) {
     let row: number[] = []
     for (let j=0; j < cons.GRID_WIDTH; j++) {
-      console.log(i)
       if (j == myGlobal.start[0] && i == myGlobal.start[1]){
         row.push(2)
       } else if (j == myGlobal.end[0] && i == myGlobal.end[1]) {
@@ -128,7 +125,6 @@ function mainLoop() {
       if (myGlobal.generatorAlgo !== null) {
         let algoResults = myGlobal.generatorAlgo.next()
         let newGrid = algoResults['value']
-        console.log(algoResults)
 
         if (!algoResults.done) {
           updateCanvas(newGrid, cons.CTX)
