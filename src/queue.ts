@@ -53,7 +53,7 @@ export class Queue {
     printQueue() {
         let ret = []
         let temp = this.head;
-        while (temp !== null && this.head.next !== this.tail) {
+        while (temp !== null && temp.next !== this.tail) {
             ret.push(temp.val)
             temp = temp.next
 
