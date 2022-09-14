@@ -69,6 +69,14 @@ function pauseLoop() {
 }
 const pauseButton = document.getElementById("pause");
 pauseButton?.addEventListener("click", pauseLoop, false);
+function changeSlider() {
+  delaySliderOutput.innerHTML = delaySlider.value;
+  myGlobal.delay = delaySlider.value;
+}
+const delaySlider = document.getElementById("delayRange");
+const delaySliderOutput = document.getElementById("delayValue");
+delaySliderOutput.innerHTML = delaySlider.value;
+delaySlider.addEventListener("input", changeSlider, false);
 function selectAlgo(algo, grid) {
   if (algo) {
     myGlobal.generatorAlgo = algo(grid, myGlobal.start);
@@ -96,7 +104,7 @@ function mainLoop() {
           updateCanvas(newGrid, cons.CTX);
           setTimeout(() => {
             window.requestAnimationFrame(main);
-          }, 1e3);
+          }, myGlobal.delay);
         } else {
           myGlobal.generatorAlgo = null;
           myGlobal.algoSelected = false;
@@ -114,6 +122,7 @@ myGlobal.end = cons.DEFAULT_END;
 myGlobal.isRunning = false;
 myGlobal.generatorAlgo = null;
 myGlobal.algoSelected = false;
+myGlobal.delay = delaySlider.value;
 createGrid();
 updateCanvas(myGlobal.grid, cons.CTX);
 mainLoop();
