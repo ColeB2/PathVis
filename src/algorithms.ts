@@ -24,7 +24,7 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield grid;
+        yield [grid, false];
 
         cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -36,7 +36,7 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
-    yield grid, final_path;
+    yield [grid, final_path];
 }
 
 
@@ -57,7 +57,7 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield grid;
+        yield [grid, false];
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -75,5 +75,5 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
-    yield grid, final_path; 
+    yield [grid, final_path]; 
 }
