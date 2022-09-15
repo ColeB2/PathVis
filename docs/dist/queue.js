@@ -9,6 +9,7 @@ export class Queue {
     this.head = null;
     this.tail = null;
     arr.forEach((data) => {
+      console.log("data", data);
       this.enqueue(data);
     });
   }
