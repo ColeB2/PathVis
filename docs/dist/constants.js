@@ -11,3 +11,5 @@ export const GRID_HEIGHT = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
 export const DEFAULT_STARTEND_HEIGHT = Math.floor(GRID_WIDTH / 2) - 1;
 export const DEFAULT_START = [1, DEFAULT_STARTEND_HEIGHT];
 export const DEFAULT_END = [GRID_WIDTH - 2, DEFAULT_STARTEND_HEIGHT];
+export const DFS_DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+export const BFS_DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
