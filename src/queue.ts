@@ -12,6 +12,7 @@ export class Queue {
         this.tail = null;
 
         arr.forEach((data) => {
+            console.log('data', data)
             this.enqueue(data)
         })
 

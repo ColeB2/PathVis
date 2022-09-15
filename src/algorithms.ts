@@ -35,11 +35,15 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
 
 
 export function* breadthFirstSearch(grid: number[][], start: number[]) {
-    const q = new Queue([start])
+    const initial_q: any[] = [[]]
+    initial_q.push(start)
+
+    const q = new Queue([initial_q])
     const visited = new Set<number>;
 
     while(!q.isEmpty) {
-        const [cell_x, cell_y] = q.dequeue() as number[]
+        const [path, coords] = q.dequeue()
+        const [cell_x, cell_y] = coords
 
         if (grid[cell_y][cell_x] === 3) {
             break
@@ -52,6 +56,7 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
+            const new_path = path.slice()
 
             if (
                 inBounds(new_x, new_y) && 
@@ -59,7 +64,8 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
                 !visited.has(new_cell_id)
                 ) {
                 visited.add(new_cell_id)
-                q.enqueue([new_x,new_y])       
+                new_path.push([new_x, new_y])
+                q.enqueue([new_path, [new_x, new_y]])       
             }
         })
     }
