@@ -18,7 +18,7 @@ export function* depthFirstSearch(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    yield grid;
+    yield [grid, false];
     cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_path = path.slice();
@@ -28,7 +28,8 @@ export function* depthFirstSearch(grid, start) {
       }
     });
   }
-  yield grid, final_path;
+  yield* animatePath(grid, final_path);
+  yield [grid, final_path];
 }
 export function* breadthFirstSearch(grid, start) {
   const q = new Queue([[[], start]]);
@@ -43,7 +44,7 @@ export function* breadthFirstSearch(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    yield grid;
+    yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
@@ -55,5 +56,15 @@ export function* breadthFirstSearch(grid, start) {
       }
     });
   }
-  yield grid, final_path;
+  yield* animatePath(grid, final_path);
+  yield [grid, final_path];
+}
+function* animatePath(grid, path) {
+  for (let i = 0; i < path.length; i++) {
+    const [x, y] = path[i];
+    if (grid[y][x] === 1) {
+      grid[y][x] = 5;
+      yield [grid, path];
+    }
+  }
 }

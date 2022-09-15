@@ -8,6 +8,10 @@ function updateCanvas(arr, context) {
         context.fillStyle = "black";
       } else if (arr[r][c] == 2 || arr[r][c] == 3) {
         context.fillStyle = "red";
+      } else if (arr[r][c] == 4) {
+        context.fillStyle = "blue";
+      } else if (arr[r][c] === 5) {
+        context.fillStyle = "yellow";
       } else {
         context.fillStyle = "white";
       }
@@ -96,8 +100,8 @@ function mainLoop() {
     if (myGlobal.isRunning) {
       if (myGlobal.generatorAlgo !== null) {
         let algoResults = myGlobal.generatorAlgo.next();
-        let newGrid = algoResults["value"];
         if (!algoResults.done) {
+          let [newGrid, path] = algoResults["value"];
           updateCanvas(newGrid, cons.CTX);
           setTimeout(() => {
             window.requestAnimationFrame(main);
