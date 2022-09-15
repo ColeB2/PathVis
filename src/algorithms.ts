@@ -9,12 +9,18 @@ function inBounds(x: number, y: number) {
 }
 
 export function* depthFirstSearch(grid: number[][], start: number[]) {
-    const stack: number[][] = [start]
+    const initial_stack: any[] = [[]]
+    initial_stack.push(start)
+
+    const stack: number[][] = [initial_stack]
+    let final_path: number[][] = []
 
     while(stack.length !== 0) {
-        const [cell_x, cell_y] = stack.pop() as number[]
+        const [path, coords] = stack.pop()
+        const [cell_x, cell_y] = coords
 
         if (grid[cell_y][cell_x] === 3) {
+            final_path = path;
             break
         } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4){
             grid[cell_y][cell_x] = 1
@@ -24,13 +30,15 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
 
         cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
+            const new_path = path.slice()
 
             if (inBounds(new_x, new_y) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)) {
-                stack.push([new_x,new_y])
+                new_path.push([new_x, new_y])
+                stack.push([new_path,[new_x,new_y]])
             }
         })
     }
-    yield grid  
+    yield grid, final_path;
 }
 
 
@@ -40,12 +48,14 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
 
     const q = new Queue([initial_q])
     const visited = new Set<number>;
+    let final_path = []
 
     while(!q.isEmpty) {
         const [path, coords] = q.dequeue()
         const [cell_x, cell_y] = coords
 
         if (grid[cell_y][cell_x] === 3) {
+            final_path = path;
             break
         } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
             grid[cell_y][cell_x] = 1
@@ -69,5 +79,5 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
-    yield grid  
+    yield grid, final_path; 
 }
