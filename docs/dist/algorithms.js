@@ -7,11 +7,9 @@ function inBounds(x, y) {
   return false;
 }
 export function* depthFirstSearch(grid, start) {
-  const initial_stack = [[]];
-  initial_stack.push(start);
-  const stack = [initial_stack];
+  const stack = [[[], start]];
   let final_path = [];
-  while (stack.length !== 0) {
+  while (stack.length > 0) {
     const [path, coords] = stack.pop();
     const [cell_x, cell_y] = coords;
     if (grid[cell_y][cell_x] === 3) {
@@ -33,9 +31,7 @@ export function* depthFirstSearch(grid, start) {
   yield grid, final_path;
 }
 export function* breadthFirstSearch(grid, start) {
-  const initial_q = [[]];
-  initial_q.push(start);
-  const q = new Queue([initial_q]);
+  const q = new Queue([[[], start]]);
   const visited = new Set();
   let final_path = [];
   while (!q.isEmpty) {
