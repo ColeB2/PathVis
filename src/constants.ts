@@ -15,3 +15,6 @@ export const DEFAULT_STARTEND_HEIGHT: number = Math.floor(GRID_WIDTH/2) - 1
 
 export const DEFAULT_START: number[] = [1, DEFAULT_STARTEND_HEIGHT]
 export const DEFAULT_END: number[] = [GRID_WIDTH-2, DEFAULT_STARTEND_HEIGHT]
+
+export const DFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+export const BFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
