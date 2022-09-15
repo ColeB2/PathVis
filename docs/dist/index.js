@@ -1,10 +1,8 @@
 import * as cons from "./constants.js";
-import {depthFirstSearch} from "./algorithms.js";
+import {breadthFirstSearch, depthFirstSearch} from "./algorithms.js";
 function updateCanvas(arr, context) {
   context.clearRect(0, 0, cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT);
-  console.log("updateCanvas");
   arr.forEach((row, r) => {
-    console.log(row);
     row.forEach((col, c) => {
       if (arr[r][c] == 1) {
         context.fillStyle = "black";
@@ -22,7 +20,6 @@ function createGrid() {
   for (let i = 0; i < cons.GRID_HEIGHT; i++) {
     let row = [];
     for (let j = 0; j < cons.GRID_WIDTH; j++) {
-      console.log(i);
       if (j == myGlobal.start[0] && i == myGlobal.start[1]) {
         row.push(2);
       } else if (j == myGlobal.end[0] && i == myGlobal.end[1]) {
@@ -83,7 +80,8 @@ function selectAlgo(algo, grid) {
   }
 }
 const algoDict = {
-  depthFirstSearch
+  depthFirstSearch,
+  breadthFirstSearch
 };
 const algorithmSelectMenu = document.getElementById("algorithm-menu");
 function algorithmSelectFunction() {
@@ -99,7 +97,6 @@ function mainLoop() {
       if (myGlobal.generatorAlgo !== null) {
         let algoResults = myGlobal.generatorAlgo.next();
         let newGrid = algoResults["value"];
-        console.log(algoResults);
         if (!algoResults.done) {
           updateCanvas(newGrid, cons.CTX);
           setTimeout(() => {
