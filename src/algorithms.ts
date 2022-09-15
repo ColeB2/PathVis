@@ -36,6 +36,7 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
+    yield* animatePath(grid, final_path)
     yield [grid, final_path];
 }
 
@@ -75,5 +76,17 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
-    yield [grid, final_path]; 
+    yield* animatePath(grid, final_path)
+    yield [grid, final_path];
 }
+
+
+function* animatePath(grid: number[][], path: number[][]) {
+    for(let i = 0; i < path.length; i++) {
+        const [x, y] = path[i];
+        if (grid[y][x] === 1) {
+            grid[y][x] = 5
+            yield [grid, path];
+        }
+    }
+  }

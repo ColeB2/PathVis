@@ -13,10 +13,19 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
       if (arr[r][c] == 1) {
+        //visited node
         context.fillStyle = "black"
       } else if (arr[r][c] == 2 || arr[r][c] == 3) {
+        //start, end node
         context.fillStyle = "red"
+      } else if (arr[r][c] == 4) {
+        //wall
+        context.fillStyle = "blue"
+      } else if (arr[r][c] === 5) {
+        //final path
+        context.fillStyle = "yellow"
       } else {
+        //open node
         context.fillStyle = "white"
       }
       context.fillRect(c*cons.CELL_WIDTH, r*cons.CELL_WIDTH,
@@ -124,14 +133,13 @@ function mainLoop() {
     if (myGlobal.isRunning) {
       if (myGlobal.generatorAlgo !== null) {
         let algoResults = myGlobal.generatorAlgo.next()
-        let newGrid = algoResults['value']
 
         if (!algoResults.done) {
+          let [newGrid, path] = algoResults['value']
           updateCanvas(newGrid, cons.CTX)
           setTimeout ( () => {
             window.requestAnimationFrame(main);
           }, myGlobal.delay)
-
         } else {
           myGlobal.generatorAlgo = null;
           myGlobal.algoSelected = false;
