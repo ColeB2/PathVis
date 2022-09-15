@@ -9,14 +9,12 @@ function inBounds(x: number, y: number) {
 }
 
 export function* depthFirstSearch(grid: number[][], start: number[]) {
-    const initial_stack: any[] = [[]]
-    initial_stack.push(start)
 
-    const stack: number[][] = [initial_stack]
+    const stack: any[][] = [ [[],start] ]
     let final_path: number[][] = []
 
-    while(stack.length !== 0) {
-        const [path, coords] = stack.pop()
+    while(stack.length > 0) {
+        const [path, coords] = stack.pop()!
         const [cell_x, cell_y] = coords
 
         if (grid[cell_y][cell_x] === 3) {
@@ -43,10 +41,8 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
 
 
 export function* breadthFirstSearch(grid: number[][], start: number[]) {
-    const initial_q: any[] = [[]]
-    initial_q.push(start)
 
-    const q = new Queue([initial_q])
+    const q = new Queue([ [[],start] ])
     const visited = new Set<number>;
     let final_path = []
 
