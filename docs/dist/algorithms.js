@@ -7,10 +7,15 @@ function inBounds(x, y) {
   return false;
 }
 export function* depthFirstSearch(grid, start) {
-  const stack = [start];
+  const initial_stack = [[]];
+  initial_stack.push(start);
+  const stack = [initial_stack];
+  let final_path = [];
   while (stack.length !== 0) {
-    const [cell_x, cell_y] = stack.pop();
+    const [path, coords] = stack.pop();
+    const [cell_x, cell_y] = coords;
     if (grid[cell_y][cell_x] === 3) {
+      final_path = path;
       break;
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
@@ -18,22 +23,26 @@ export function* depthFirstSearch(grid, start) {
     yield grid;
     cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
+      const new_path = path.slice();
       if (inBounds(new_x, new_y) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)) {
-        stack.push([new_x, new_y]);
+        new_path.push([new_x, new_y]);
+        stack.push([new_path, [new_x, new_y]]);
       }
     });
   }
-  yield grid;
+  yield grid, final_path;
 }
 export function* breadthFirstSearch(grid, start) {
   const initial_q = [[]];
   initial_q.push(start);
   const q = new Queue([initial_q]);
   const visited = new Set();
+  let final_path = [];
   while (!q.isEmpty) {
     const [path, coords] = q.dequeue();
     const [cell_x, cell_y] = coords;
     if (grid[cell_y][cell_x] === 3) {
+      final_path = path;
       break;
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
@@ -50,5 +59,5 @@ export function* breadthFirstSearch(grid, start) {
       }
     });
   }
-  yield grid;
+  yield grid, final_path;
 }
