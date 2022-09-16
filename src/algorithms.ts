@@ -81,6 +81,30 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
 }
 
 
+export function* dijkstrasAlgorithm (grid: number[][], path: number[][]) {
+    const weight: number[][] = createDistanceGrid(grid.slice())
+    console.log(weight)
+
+
+}
+
+function createDistanceGrid(grid: number[][]) {
+    let end: number[] = []
+
+    grid.forEach((row, r) => {
+        row.forEach((col, c) => {
+            if (grid[r][c] !== 2 && grid[r][c] !== 3) {
+                grid[r][c] = Infinity
+            } else if (grid[r][c] === 3) {
+                end = [c,r]
+            }
+
+        })
+    })
+    return [grid, end]
+}
+
+
 function* animatePath(grid: number[][], path: number[][]) {
     for(let i = 0; i < path.length; i++) {
         const [x, y] = path[i];
