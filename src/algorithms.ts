@@ -1,5 +1,6 @@
 import * as cons from './constants';
 import { Queue } from './queue';
+import { Heap } from './heap';
 
 function inBounds(x: number, y: number) {
     if (x >= 0 && x < cons.GRID_WIDTH && y >= 0 && y < cons.GRID_HEIGHT) {
@@ -81,27 +82,80 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
 }
 
 
-export function* dijkstrasAlgorithm (grid: number[][], path: number[][]) {
-    const weight: number[][] = createDistanceGrid(grid.slice())
-    console.log(weight)
-
-
+function compareFunc(a: any[], b: any[]) {
+    let ret = a[0] - b[0]
+    return ret;
 }
 
-function createDistanceGrid(grid: number[][]) {
-    let end: number[] = []
+export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
+    const data: any[] = createDijkstrasData(grid)
+    const weightedGrid: number[][] = data[0]
+    const unvisited: Set<number> = data[1]
+
+    let final_path = []
+
+    const h = new Heap(compareFunc)
+    h.add([0,start, []])
+
+    while (!h.isEmpty) {
+        const [val, node, path] = h.pop()!
+        const [cell_x, cell_y] = node
+        const cell_id = (cell_x*cons.GRID_WIDTH) + cell_y
+
+        if (!unvisited.has(cell_id)) {continue}
+
+        if (grid[cell_y][cell_x] === 3) {
+            final_path = path;
+            break
+        } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
+            grid[cell_y][cell_x] = 1
+        }
+        
+        yield [grid, false];
+
+        cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
+            const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
+            const new_cell_id = (new_x*cons.GRID_WIDTH) + new_y
+            
+
+            if (
+                inBounds(new_x, new_y) && unvisited.has(new_cell_id)
+                ) {
+                const weight = weightedGrid[new_y][new_x];
+                const new_path = path.slice()
+                new_path.push([new_x, new_y])
+            
+                weightedGrid[new_y][new_x] = Math.min(val+1, weight)
+                h.add([weightedGrid[new_y][new_x], [new_x, new_y], new_path])
+            }
+        })
+        unvisited.delete(cell_id)
+    }
+    yield* animatePath(grid, final_path)
+    yield [grid, final_path];
+}
+
+function createDijkstrasData(grid: number[][]) {
+    let new_grid: number[][] = [];
+    let unvisited: Set<number> = new Set()
 
     grid.forEach((row, r) => {
+        let new_row: number[] = [];
         row.forEach((col, c) => {
-            if (grid[r][c] !== 2 && grid[r][c] !== 3) {
-                grid[r][c] = Infinity
-            } else if (grid[r][c] === 3) {
-                end = [c,r]
-            }
+            const cell_id = (r*cons.GRID_WIDTH) + c
+            unvisited.add(cell_id)
 
+            if (grid[r][c] === 2) {
+                new_row.push(0)
+            } else {
+                new_row.push(Infinity)
+            }
+        
         })
+    new_grid.push(new_row)
     })
-    return [grid, end]
+    console.log(unvisited)
+    return [new_grid, unvisited]
 }
 
 
