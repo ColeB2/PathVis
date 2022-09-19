@@ -26,7 +26,7 @@ function mouseClick() {
     const y = event.pageY - cons.CANVAS_TOP;
     myGlobal.grid.forEach((row, r) => {
       row.forEach((col, c) => {
-        if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH - 2 && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH - 2) {
+        if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH - 2 && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH - 2 && myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3) {
           myGlobal.grid[r][c] = myGlobal.grid[r][c] === 0 ? 4 : 0;
           updateCanvas(myGlobal.grid, cons.CTX);
         }
@@ -39,7 +39,7 @@ function mouseMove(event) {
   const y = event.pageY - cons.CANVAS_TOP;
   myGlobal.grid.forEach((row, r) => {
     row.forEach((col, c) => {
-      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH) {
+      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH && myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3) {
         myGlobal.grid[r][c] = 4;
         updateCanvas(myGlobal.grid, cons.CTX);
       }
