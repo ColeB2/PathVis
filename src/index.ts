@@ -41,15 +41,13 @@ function mouseClick() {
   cons.CANVAS.addEventListener('click', (event) => {
     const x = event.pageX - cons.CANVAS_LEFT;
     const y = event.pageY - cons.CANVAS_TOP;
-    console.log(x,y)
-
+    
     myGlobal.grid.forEach((row: [], r: number) => {
       row.forEach((col: number, c: number) => {
         if (
           y > r*cons.CELL_WIDTH && y < (r*cons.CELL_WIDTH)+cons.CELL_WIDTH-2 &&
           x > c*cons.CELL_WIDTH && x < (c*cons.CELL_WIDTH)+cons.CELL_WIDTH-2) {
-            console.log('click', x, y, c, r) 
-            myGlobal.grid[r][c] = 4
+            myGlobal.grid[r][c] = (myGlobal.grid[r][c] === 0 ? 4 : 0)
             updateCanvas(myGlobal.grid, cons.CTX)
         }
 
@@ -62,6 +60,7 @@ function mouseClick() {
 function mouseMove(event: any) {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
+
     myGlobal.grid.forEach((row: [], r: number) => {
       row.forEach((col: number, c: number) => {
         if (
