@@ -43,8 +43,8 @@ function mouseClick() {
     const y = event.pageY - cons.CANVAS_TOP;
     console.log(x,y)
 
-    myGlobal.grid.forEach((row, r) => {
-      row.forEach((col, c) => {
+    myGlobal.grid.forEach((row: [], r: number) => {
+      row.forEach((col: number, c: number) => {
         if (
           y > r*cons.CELL_WIDTH && y < (r*cons.CELL_WIDTH)+cons.CELL_WIDTH-2 &&
           x > c*cons.CELL_WIDTH && x < (c*cons.CELL_WIDTH)+cons.CELL_WIDTH-2) {
