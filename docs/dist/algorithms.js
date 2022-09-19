@@ -88,7 +88,7 @@ export function* dijkstrasAlgorithm(grid, start) {
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_cell_id = new_x * cons.GRID_WIDTH + new_y;
-      if (inBounds(new_x, new_y) && unvisited.has(new_cell_id)) {
+      if (inBounds(new_x, new_y) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const weight = weightedGrid[new_y][new_x];
         const new_path = path.slice();
         new_path.push([new_x, new_y]);
