@@ -119,7 +119,8 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
             
 
             if (
-                inBounds(new_x, new_y) && unvisited.has(new_cell_id)
+                inBounds(new_x, new_y) && unvisited.has(new_cell_id) &&
+                grid[new_y][new_x] !== 4
                 ) {
                 const weight = weightedGrid[new_y][new_x];
                 const new_path = path.slice()
