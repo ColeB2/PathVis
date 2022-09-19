@@ -15,9 +15,48 @@ function updateCanvas(arr, context) {
       } else {
         context.fillStyle = "white";
       }
-      context.fillRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH - 2, cons.CELL_WIDTH - 2);
-      context.strokeRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH - 2, cons.CELL_WIDTH - 2);
+      context.fillRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH, cons.CELL_WIDTH);
+      context.strokeRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH, cons.CELL_WIDTH);
     });
+  });
+}
+function mouseClick() {
+  cons.CANVAS.addEventListener("click", (event) => {
+    const x = event.pageX - cons.CANVAS_LEFT;
+    const y = event.pageY - cons.CANVAS_TOP;
+    console.log(x, y);
+    myGlobal.grid.forEach((row, r) => {
+      row.forEach((col, c) => {
+        if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH - 2 && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH - 2) {
+          console.log("click", x, y, c, r);
+          myGlobal.grid[r][c] = 4;
+          updateCanvas(myGlobal.grid, cons.CTX);
+        }
+      });
+    });
+  });
+}
+function mouseMove(event) {
+  const x = event.pageX - cons.CANVAS_LEFT;
+  const y = event.pageY - cons.CANVAS_TOP;
+  myGlobal.grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH) {
+        myGlobal.grid[r][c] = 4;
+        updateCanvas(myGlobal.grid, cons.CTX);
+      }
+    });
+  });
+}
+function mouseMoveWhileDown(whileMove) {
+  var endMove = function() {
+    cons.CANVAS.removeEventListener("mousemove", whileMove);
+    cons.CANVAS.removeEventListener("mouseup", endMove);
+  };
+  cons.CANVAS.addEventListener("mousedown", (event) => {
+    event.stopPropagation();
+    cons.CANVAS.addEventListener("mousemove", whileMove);
+    cons.CANVAS.addEventListener("mouseup", endMove);
   });
 }
 function createGrid() {
@@ -127,4 +166,6 @@ myGlobal.algoSelected = false;
 myGlobal.delay = delaySlider.value;
 createGrid();
 updateCanvas(myGlobal.grid, cons.CTX);
+mouseClick();
+mouseMoveWhileDown((event) => mouseMove(event));
 mainLoop();
