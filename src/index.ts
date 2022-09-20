@@ -12,21 +12,25 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
   context.clearRect(0,0,cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT)
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
-      if (arr[r][c] == 1) {
-        //visited node
-        context.fillStyle = "black"
-      } else if (arr[r][c] == 2 || arr[r][c] == 3) {
-        //start, end node
-        context.fillStyle = "red"
-      } else if (arr[r][c] == 4) {
-        //wall
-        context.fillStyle = "blue"
-      } else if (arr[r][c] === 5) {
-        //final path
-        context.fillStyle = "yellow"
-      } else {
-        //open node
-        context.fillStyle = "white"
+      switch(arr[r][c]) {
+        case 0: // Open Node
+          context.fillStyle = "white"
+          break
+        case 1: // Searched Node
+          context.fillStyle = "black"
+          break
+        case 2: // Start Node
+          context.fillStyle = "green"
+          break
+        case 3: // Ending Node
+          context.fillStyle = "red"
+          break
+        case 4: // Wall Node
+          context.fillStyle = "blue"
+          break
+        case 5: // Final Path Node
+          context.fillStyle = "yellow"
+          break
       }
       context.fillRect(c*cons.CELL_WIDTH, r*cons.CELL_WIDTH,
         cons.CELL_WIDTH, cons.CELL_WIDTH)
@@ -37,8 +41,10 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
   })
 }
 
+
+// Mouse Controls
 function mouseClick() {
-  cons.CANVAS.addEventListener('click', (event) => {
+  cons.CANVAS.addEventListener('click', (event: MouseEvent) => {
     const x = event.pageX - cons.CANVAS_LEFT;
     const y = event.pageY - cons.CANVAS_TOP;
 
@@ -51,14 +57,13 @@ function mouseClick() {
             myGlobal.grid[r][c] = (myGlobal.grid[r][c] === 0 ? 4 : 0)
             updateCanvas(myGlobal.grid, cons.CTX)
         }
-
       })
     })
   })
 
 }
 
-function mouseMove(event: any) {
+function mouseMove(event: MouseEvent) {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
 
@@ -77,13 +82,13 @@ function mouseMove(event: any) {
 
 }
 
-function mouseMoveWhileDown(whileMove: (event: any) => void) {
+function mouseMoveWhileDown(whileMove: (event: MouseEvent) => void) {
   var endMove = function() {
     cons.CANVAS.removeEventListener('mousemove', whileMove);
     cons.CANVAS.removeEventListener('mouseup', endMove);
   }
   
-  cons.CANVAS.addEventListener('mousedown', (event) => {
+  cons.CANVAS.addEventListener('mousedown', (event: MouseEvent) => {
     event.stopPropagation();
     cons.CANVAS.addEventListener('mousemove', whileMove);
     cons.CANVAS.addEventListener('mouseup', endMove);
