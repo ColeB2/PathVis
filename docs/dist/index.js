@@ -4,16 +4,25 @@ function updateCanvas(arr, context) {
   context.clearRect(0, 0, cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT);
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
-      if (arr[r][c] == 1) {
-        context.fillStyle = "black";
-      } else if (arr[r][c] == 2 || arr[r][c] == 3) {
-        context.fillStyle = "red";
-      } else if (arr[r][c] == 4) {
-        context.fillStyle = "blue";
-      } else if (arr[r][c] === 5) {
-        context.fillStyle = "yellow";
-      } else {
-        context.fillStyle = "white";
+      switch (arr[r][c]) {
+        case 0:
+          context.fillStyle = "white";
+          break;
+        case 1:
+          context.fillStyle = "black";
+          break;
+        case 2:
+          context.fillStyle = "green";
+          break;
+        case 3:
+          context.fillStyle = "red";
+          break;
+        case 4:
+          context.fillStyle = "blue";
+          break;
+        case 5:
+          context.fillStyle = "yellow";
+          break;
       }
       context.fillRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH, cons.CELL_WIDTH);
       context.strokeRect(c * cons.CELL_WIDTH, r * cons.CELL_WIDTH, cons.CELL_WIDTH, cons.CELL_WIDTH);
@@ -32,6 +41,49 @@ function mouseClick() {
         }
       });
     });
+  });
+}
+function moveStart(r, c) {
+}
+function _shiftStart(event) {
+  const x = event.pageX - cons.CANVAS_LEFT;
+  const y = event.pageY - cons.CANVAS_TOP;
+  myGlobal.grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH) {
+        myGlobal.grid[myGlobal.start[1]][myGlobal.start[0]] = 0;
+        myGlobal.grid[r][c] = 2;
+        myGlobal.start = [c, r];
+        updateCanvas(myGlobal.grid, cons.CTX);
+      }
+    });
+  });
+}
+function shiftStart(whileMove) {
+  console.log("SHIFTY START");
+  var endMove = function() {
+    cons.CANVAS.removeEventListener("mousemove", _shiftStart);
+    cons.CANVAS.removeEventListener("mouseup", endMove);
+  };
+  var endMove2 = function() {
+    cons.CANVAS.removeEventListener("mousemove", mouseMove);
+    cons.CANVAS.removeEventListener("mouseup", endMove2);
+  };
+  cons.CANVAS.addEventListener("mousedown", (event) => {
+    const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH);
+    const y = Math.floor((event.pageY - cons.CANVAS_TOP) / cons.CELL_WIDTH);
+    if (x == myGlobal.start[0] && y == myGlobal.start[1]) {
+      event.stopPropagation();
+      cons.CANVAS.addEventListener("mousemove", _shiftStart);
+      cons.CANVAS.addEventListener("mouseup", endMove);
+    } else if (x == myGlobal.end[0] && y == myGlobal.end[1]) {
+      console.log("click moving end");
+    } else {
+      console.log("Else moving");
+      event.stopPropagation();
+      cons.CANVAS.addEventListener("mousemove", mouseMove);
+      cons.CANVAS.addEventListener("mouseup", endMove2);
+    }
   });
 }
 function mouseMove(event) {
@@ -117,6 +169,7 @@ delaySliderOutput.innerHTML = delaySlider.value;
 delaySlider.addEventListener("input", changeSlider, false);
 function selectAlgo(algo, grid) {
   if (algo) {
+    console.log(myGlobal.start);
     myGlobal.generatorAlgo = algo(grid, myGlobal.start);
   }
 }
@@ -165,5 +218,5 @@ myGlobal.delay = delaySlider.value;
 createGrid();
 updateCanvas(myGlobal.grid, cons.CTX);
 mouseClick();
-mouseMoveWhileDown((event) => mouseMove(event));
+shiftStart((event) => _shiftStart(event));
 mainLoop();
