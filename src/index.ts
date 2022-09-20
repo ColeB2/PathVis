@@ -60,8 +60,62 @@ function mouseClick() {
       })
     })
   })
-
 }
+
+function moveStart(r,c) {
+}
+
+function _shiftStart(event: MouseEvent) {
+  const x = event.pageX - cons.CANVAS_LEFT;
+  const y = event.pageY - cons.CANVAS_TOP;
+
+    myGlobal.grid.forEach((row: [], r: number) => {
+      row.forEach((col: number, c: number) => {
+        if (
+          y > r*cons.CELL_WIDTH && y < r*cons.CELL_WIDTH + cons.CELL_WIDTH && 
+          x > c*cons.CELL_WIDTH && x < c*cons.CELL_WIDTH + cons.CELL_WIDTH
+          ) {
+            myGlobal.grid[myGlobal.start[1]][myGlobal.start[0]] = 0
+            myGlobal.grid[r][c] = 2
+            myGlobal.start = [c,r]
+            updateCanvas(myGlobal.grid, cons.CTX)
+          }
+      })
+    })
+}
+
+
+function shiftStart(whileMove: (event: MouseEvent) => void) {
+  console.log('SHIFTY START')
+  
+  var endMove = function() {
+    cons.CANVAS.removeEventListener('mousemove', _shiftStart);
+    cons.CANVAS.removeEventListener('mouseup', endMove);
+  }
+
+  var endMove2 = function() {
+    cons.CANVAS.removeEventListener('mousemove', mouseMove);
+    cons.CANVAS.removeEventListener('mouseup', endMove2);
+  }
+  
+  cons.CANVAS.addEventListener('mousedown', (event: MouseEvent) => {
+    const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH)
+    const y = Math.floor((event.pageY - cons.CANVAS_TOP)/ cons.CELL_WIDTH)
+    if (x == myGlobal.start[0] && y == myGlobal.start[1]) {
+      event.stopPropagation();
+      cons.CANVAS.addEventListener('mousemove', _shiftStart);
+      cons.CANVAS.addEventListener('mouseup', endMove);
+    } else if (x == myGlobal.end[0] && y == myGlobal.end[1] ) {
+      console.log('click moving end')
+    } else {
+      console.log('Else moving')
+      event.stopPropagation();
+      cons.CANVAS.addEventListener('mousemove', mouseMove);
+      cons.CANVAS.addEventListener('mouseup', endMove2);
+    }
+  })
+}
+
 
 function mouseMove(event: MouseEvent) {
   const x = event.pageX - cons.CANVAS_LEFT;
@@ -79,7 +133,6 @@ function mouseMove(event: MouseEvent) {
           }
       })
     })
-
 }
 
 function mouseMoveWhileDown(whileMove: (event: MouseEvent) => void) {
@@ -168,6 +221,7 @@ delaySlider.addEventListener('input', changeSlider, false)
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
+  console.log(myGlobal.start)
 	myGlobal.generatorAlgo = algo(grid, myGlobal.start)
 	}
 }
@@ -238,6 +292,7 @@ updateCanvas(myGlobal.grid, cons.CTX)
 
 //Mouse controls
 mouseClick()
-mouseMoveWhileDown((event) => mouseMove(event))
+// mouseMoveWhileDown((event) => mouseMove(event))
+shiftStart((event) => (_shiftStart(event)))
 
 mainLoop();
