@@ -95,7 +95,25 @@ function _shiftEnd(event: MouseEvent) {
         ) {
           myGlobal.grid[myGlobal.end[1]][myGlobal.end[0]] = 0
           myGlobal.grid[r][c] = 3
-          myGlobal.start = [c,r]
+          myGlobal.end = [c,r]
+          updateCanvas(myGlobal.grid, cons.CTX)
+        }
+    })
+  })
+}
+
+function mouseMove(event: MouseEvent) {
+  const x = event.pageX - cons.CANVAS_LEFT;
+  const y = event.pageY - cons.CANVAS_TOP;
+
+  myGlobal.grid.forEach((row: [], r: number) => {
+    row.forEach((col: number, c: number) => {
+      if (
+        y > r*cons.CELL_WIDTH && y < r*cons.CELL_WIDTH + cons.CELL_WIDTH && 
+        x > c*cons.CELL_WIDTH && x < c*cons.CELL_WIDTH + cons.CELL_WIDTH &&
+        myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3
+        ) {
+          myGlobal.grid[r][c] = 4
           updateCanvas(myGlobal.grid, cons.CTX)
         }
     })
@@ -103,75 +121,38 @@ function _shiftEnd(event: MouseEvent) {
 }
 
 
-function shiftStart(whileMove: (event: MouseEvent) => void) {  
-  var endMove = function() {
-    cons.CANVAS.removeEventListener('mousemove', _shiftStart);
-    cons.CANVAS.removeEventListener('mouseup', endMove);
-  }
+function endWallPlacement() {
+  cons.CANVAS.removeEventListener('mousemove', mouseMove)
+  cons.CANVAS.removeEventListener('mouseup', endWallPlacement)
+}
 
-  var endMove2 = function() {
-    cons.CANVAS.removeEventListener('mousemove', mouseMove);
-    cons.CANVAS.removeEventListener('mouseup', endMove2);
-  }
+function endShiftStart() {
+  cons.CANVAS.removeEventListener('mousemove', _shiftStart)
+  cons.CANVAS.removeEventListener('mouseup', endShiftStart)
+}
 
-  var endMove3 = function() {
-    cons.CANVAS.removeEventListener('mousemove', _shiftEnd)
-    cons.CANVAS.removeEventListener('mouseup', endMove3)
-  }
-  
+function endShiftEnd() {
+  cons.CANVAS.removeEventListener('mousemove', _shiftEnd)
+  cons.CANVAS.removeEventListener('mouseup', endShiftEnd)
+}
+
+function mouseMovementControls() {    
   cons.CANVAS.addEventListener('mousedown', (event: MouseEvent) => {
-    console.log(event)
     const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH)
     const y = Math.floor((event.pageY - cons.CANVAS_TOP)/ cons.CELL_WIDTH)
+    event.stopPropagation();
     if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
-      event.stopPropagation();
       cons.CANVAS.addEventListener('mousemove', _shiftStart);
-      cons.CANVAS.addEventListener('mouseup', endMove);
+      cons.CANVAS.addEventListener('mouseup', endShiftStart);
     } else if (x === myGlobal.end[0] && y === myGlobal.end[1] ) {
-      console.log('end')
-      // event.stopPropagation();
-      // cons.CANVAS.addEventListener('mousemove', _shiftEnd);
-      // cons.CANVAS.addEventListener('mouseup', endMove3);
+      cons.CANVAS.addEventListener('mousemove', _shiftEnd);
+      cons.CANVAS.addEventListener('mouseup', endShiftEnd);
     } else {
-      event.stopPropagation();
       cons.CANVAS.addEventListener('mousemove', mouseMove);
-      cons.CANVAS.addEventListener('mouseup', endMove2);
+      cons.CANVAS.addEventListener('mouseup', endWallPlacement);
     }
   })
 }
-
-
-function mouseMove(event: MouseEvent) {
-  const x = event.pageX - cons.CANVAS_LEFT;
-  const y = event.pageY - cons.CANVAS_TOP;
-
-    myGlobal.grid.forEach((row: [], r: number) => {
-      row.forEach((col: number, c: number) => {
-        if (
-          y > r*cons.CELL_WIDTH && y < r*cons.CELL_WIDTH + cons.CELL_WIDTH && 
-          x > c*cons.CELL_WIDTH && x < c*cons.CELL_WIDTH + cons.CELL_WIDTH &&
-          myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3
-          ) {
-            myGlobal.grid[r][c] = 4
-            updateCanvas(myGlobal.grid, cons.CTX)
-          }
-      })
-    })
-}
-
-function mouseMoveWhileDown(whileMove: (event: MouseEvent) => void) {
-  var endMove = function() {
-    cons.CANVAS.removeEventListener('mousemove', whileMove);
-    cons.CANVAS.removeEventListener('mouseup', endMove);
-  }
-  
-  cons.CANVAS.addEventListener('mousedown', (event: MouseEvent) => {
-    event.stopPropagation();
-    cons.CANVAS.addEventListener('mousemove', whileMove);
-    cons.CANVAS.addEventListener('mouseup', endMove);
-  })
-}
-
 
 
 function createGrid() {
@@ -283,9 +264,7 @@ function mainLoop() {
           myGlobal.algoSelected = false;
           pauseLoop();
         }
-
       }
-      
     }
   }
   window.requestAnimationFrame(main);
@@ -316,7 +295,6 @@ updateCanvas(myGlobal.grid, cons.CTX)
 
 //Mouse controls
 mouseClick()
-// mouseMoveWhileDown((event) => mouseMove(event))
-shiftStart((event) => (_shiftStart(event)))
+mouseMovementControls();
 
 mainLoop();
