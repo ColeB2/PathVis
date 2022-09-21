@@ -43,14 +43,12 @@ function mouseClick() {
     });
   });
 }
-function moveStart(r, c) {
-}
 function _shiftStart(event) {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
   myGlobal.grid.forEach((row, r) => {
     row.forEach((col, c) => {
-      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH) {
+      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH && myGlobal.grid[r][c] !== 3) {
         myGlobal.grid[myGlobal.start[1]][myGlobal.start[0]] = 0;
         myGlobal.grid[r][c] = 2;
         myGlobal.start = [c, r];
@@ -59,8 +57,21 @@ function _shiftStart(event) {
     });
   });
 }
+function _shiftEnd(event) {
+  const x = event.pageX - cons.CANVAS_LEFT;
+  const y = event.pageY - cons.CANVAS_TOP;
+  myGlobal.grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH && myGlobal.grid[r][c] !== 2) {
+        myGlobal.grid[myGlobal.end[1]][myGlobal.end[0]] = 0;
+        myGlobal.grid[r][c] = 3;
+        myGlobal.start = [c, r];
+        updateCanvas(myGlobal.grid, cons.CTX);
+      }
+    });
+  });
+}
 function shiftStart(whileMove) {
-  console.log("SHIFTY START");
   var endMove = function() {
     cons.CANVAS.removeEventListener("mousemove", _shiftStart);
     cons.CANVAS.removeEventListener("mouseup", endMove);
@@ -69,17 +80,21 @@ function shiftStart(whileMove) {
     cons.CANVAS.removeEventListener("mousemove", mouseMove);
     cons.CANVAS.removeEventListener("mouseup", endMove2);
   };
+  var endMove3 = function() {
+    cons.CANVAS.removeEventListener("mousemove", _shiftEnd);
+    cons.CANVAS.removeEventListener("mouseup", endMove3);
+  };
   cons.CANVAS.addEventListener("mousedown", (event) => {
+    console.log(event);
     const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH);
     const y = Math.floor((event.pageY - cons.CANVAS_TOP) / cons.CELL_WIDTH);
-    if (x == myGlobal.start[0] && y == myGlobal.start[1]) {
+    if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
       event.stopPropagation();
       cons.CANVAS.addEventListener("mousemove", _shiftStart);
       cons.CANVAS.addEventListener("mouseup", endMove);
-    } else if (x == myGlobal.end[0] && y == myGlobal.end[1]) {
-      console.log("click moving end");
+    } else if (x === myGlobal.end[0] && y === myGlobal.end[1]) {
+      console.log("end");
     } else {
-      console.log("Else moving");
       event.stopPropagation();
       cons.CANVAS.addEventListener("mousemove", mouseMove);
       cons.CANVAS.addEventListener("mouseup", endMove2);
