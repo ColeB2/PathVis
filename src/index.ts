@@ -169,7 +169,7 @@ function createGrid(height: number, width: number, start: number[], end: number[
   return grid
 }
 
-function clearGrid(grid: number[][]): number[][] {
+function clearGrid(grid: number[][]): void {
   grid.forEach((row: number[], r: number) => {
     row.forEach((col: number, c: number) => {
       if (col === 2 || col === 3) {
@@ -178,11 +178,10 @@ function clearGrid(grid: number[][]): number[][] {
       }
     })
   })
-  return grid
 }
 
-function reset() {
-  myGlobal.grid = clearGrid(myGlobal.grid)
+function reset():void {
+  clearGrid(myGlobal.grid)
   myGlobal.isRunning = false;
   myGlobal.generatorAlgo = null;
   myGlobal.algoSelected = false;
@@ -191,7 +190,7 @@ function reset() {
   updateCanvas(myGlobal.grid, cons.CTX)
 }
 
-const resetButton: any = document.getElementById('reset') // any?
+const resetButton: HTMLElement = document.getElementById('reset')!
 resetButton?.addEventListener('click', reset, false)
 
 function pauseLoop() {
@@ -207,7 +206,7 @@ function pauseLoop() {
   mainLoop();
 }
 
-const pauseButton: any  = document.getElementById('pause') // any?
+const pauseButton: HTMLElement  = document.getElementById('pause')!
 pauseButton?.addEventListener('click', pauseLoop, false)
 
 
@@ -216,8 +215,8 @@ function changeSlider() {
   myGlobal.delay = delaySlider.value;
 }
 
-const delaySlider: any = document.getElementById("delayRange")
-const delaySliderOutput: any = document.getElementById("delayValue")
+const delaySlider = document.getElementById("delayRange") as HTMLInputElement
+const delaySliderOutput: HTMLElement = document.getElementById("delayValue")!
 delaySliderOutput.innerHTML = delaySlider.value;
 delaySlider.addEventListener('input', changeSlider, false)
 
@@ -225,7 +224,6 @@ delaySlider.addEventListener('input', changeSlider, false)
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
-  console.log(myGlobal.start)
 	myGlobal.generatorAlgo = algo(grid, myGlobal.start)
 	}
 }
@@ -237,7 +235,7 @@ const algoDict:any = {
 }
 
 
-const algorithmSelectMenu:any = document.getElementById('algorithm-menu') //any
+const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
   if (myGlobal.algoSelected === false || option != myGlobal.algoSelected) {
