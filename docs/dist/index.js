@@ -138,10 +138,9 @@ function clearGrid(grid) {
       }
     });
   });
-  return grid;
 }
 function reset() {
-  myGlobal.grid = clearGrid(myGlobal.grid);
+  clearGrid(myGlobal.grid);
   myGlobal.isRunning = false;
   myGlobal.generatorAlgo = null;
   myGlobal.algoSelected = false;
@@ -175,7 +174,6 @@ delaySliderOutput.innerHTML = delaySlider.value;
 delaySlider.addEventListener("input", changeSlider, false);
 function selectAlgo(algo, grid) {
   if (algo) {
-    console.log(myGlobal.start);
     myGlobal.generatorAlgo = algo(grid, myGlobal.start);
   }
 }
