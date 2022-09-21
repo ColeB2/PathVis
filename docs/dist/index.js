@@ -65,40 +65,10 @@ function _shiftEnd(event) {
       if (y > r * cons.CELL_WIDTH && y < r * cons.CELL_WIDTH + cons.CELL_WIDTH && x > c * cons.CELL_WIDTH && x < c * cons.CELL_WIDTH + cons.CELL_WIDTH && myGlobal.grid[r][c] !== 2) {
         myGlobal.grid[myGlobal.end[1]][myGlobal.end[0]] = 0;
         myGlobal.grid[r][c] = 3;
-        myGlobal.start = [c, r];
+        myGlobal.end = [c, r];
         updateCanvas(myGlobal.grid, cons.CTX);
       }
     });
-  });
-}
-function shiftStart(whileMove) {
-  var endMove = function() {
-    cons.CANVAS.removeEventListener("mousemove", _shiftStart);
-    cons.CANVAS.removeEventListener("mouseup", endMove);
-  };
-  var endMove2 = function() {
-    cons.CANVAS.removeEventListener("mousemove", mouseMove);
-    cons.CANVAS.removeEventListener("mouseup", endMove2);
-  };
-  var endMove3 = function() {
-    cons.CANVAS.removeEventListener("mousemove", _shiftEnd);
-    cons.CANVAS.removeEventListener("mouseup", endMove3);
-  };
-  cons.CANVAS.addEventListener("mousedown", (event) => {
-    console.log(event);
-    const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH);
-    const y = Math.floor((event.pageY - cons.CANVAS_TOP) / cons.CELL_WIDTH);
-    if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
-      event.stopPropagation();
-      cons.CANVAS.addEventListener("mousemove", _shiftStart);
-      cons.CANVAS.addEventListener("mouseup", endMove);
-    } else if (x === myGlobal.end[0] && y === myGlobal.end[1]) {
-      console.log("end");
-    } else {
-      event.stopPropagation();
-      cons.CANVAS.addEventListener("mousemove", mouseMove);
-      cons.CANVAS.addEventListener("mouseup", endMove2);
-    }
   });
 }
 function mouseMove(event) {
@@ -113,15 +83,33 @@ function mouseMove(event) {
     });
   });
 }
-function mouseMoveWhileDown(whileMove) {
-  var endMove = function() {
-    cons.CANVAS.removeEventListener("mousemove", whileMove);
-    cons.CANVAS.removeEventListener("mouseup", endMove);
-  };
+function endWallPlacement() {
+  cons.CANVAS.removeEventListener("mousemove", mouseMove);
+  cons.CANVAS.removeEventListener("mouseup", endWallPlacement);
+}
+function endShiftStart() {
+  cons.CANVAS.removeEventListener("mousemove", _shiftStart);
+  cons.CANVAS.removeEventListener("mouseup", endShiftStart);
+}
+function endShiftEnd() {
+  cons.CANVAS.removeEventListener("mousemove", _shiftEnd);
+  cons.CANVAS.removeEventListener("mouseup", endShiftEnd);
+}
+function mouseMovementControls() {
   cons.CANVAS.addEventListener("mousedown", (event) => {
+    const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH);
+    const y = Math.floor((event.pageY - cons.CANVAS_TOP) / cons.CELL_WIDTH);
     event.stopPropagation();
-    cons.CANVAS.addEventListener("mousemove", whileMove);
-    cons.CANVAS.addEventListener("mouseup", endMove);
+    if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
+      cons.CANVAS.addEventListener("mousemove", _shiftStart);
+      cons.CANVAS.addEventListener("mouseup", endShiftStart);
+    } else if (x === myGlobal.end[0] && y === myGlobal.end[1]) {
+      cons.CANVAS.addEventListener("mousemove", _shiftEnd);
+      cons.CANVAS.addEventListener("mouseup", endShiftEnd);
+    } else {
+      cons.CANVAS.addEventListener("mousemove", mouseMove);
+      cons.CANVAS.addEventListener("mouseup", endWallPlacement);
+    }
   });
 }
 function createGrid() {
@@ -233,5 +221,5 @@ myGlobal.delay = delaySlider.value;
 createGrid();
 updateCanvas(myGlobal.grid, cons.CTX);
 mouseClick();
-shiftStart((event) => _shiftStart(event));
+mouseMovementControls();
 mainLoop();
