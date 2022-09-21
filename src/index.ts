@@ -4,7 +4,7 @@ import { breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm } from './algo
 
 
 
-function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
+function updateCanvas(arr: number[][], context: CanvasRenderingContext2D): void {
   context.clearRect(0,0,cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT)
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
@@ -39,7 +39,7 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
 
 
 // Mouse Controls
-function mouseClick() {
+function mouseClick(): void {
   cons.CANVAS.addEventListener('click', (event: MouseEvent) => {
     const x = event.pageX - cons.CANVAS_LEFT;
     const y = event.pageY - cons.CANVAS_TOP;
@@ -58,7 +58,7 @@ function mouseClick() {
   })
 }
 
-function _shiftStart(event: MouseEvent) {
+function _shiftStart(event: MouseEvent): void {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
 
@@ -78,7 +78,7 @@ function _shiftStart(event: MouseEvent) {
   })
 }
 
-function _shiftEnd(event: MouseEvent) {
+function _shiftEnd(event: MouseEvent): void {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
 
@@ -98,7 +98,7 @@ function _shiftEnd(event: MouseEvent) {
   })
 }
 
-function mouseMove(event: MouseEvent) {
+function mouseMove(event: MouseEvent): void {
   const x = event.pageX - cons.CANVAS_LEFT;
   const y = event.pageY - cons.CANVAS_TOP;
 
@@ -117,22 +117,22 @@ function mouseMove(event: MouseEvent) {
 }
 
 
-function endWallPlacement() {
+function endWallPlacement(): void {
   cons.CANVAS.removeEventListener('mousemove', mouseMove)
   cons.CANVAS.removeEventListener('mouseup', endWallPlacement)
 }
 
-function endShiftStart() {
+function endShiftStart(): void {
   cons.CANVAS.removeEventListener('mousemove', _shiftStart)
   cons.CANVAS.removeEventListener('mouseup', endShiftStart)
 }
 
-function endShiftEnd() {
+function endShiftEnd(): void {
   cons.CANVAS.removeEventListener('mousemove', _shiftEnd)
   cons.CANVAS.removeEventListener('mouseup', endShiftEnd)
 }
 
-function mouseMovementControls() {    
+function mouseMovementControls(): void {    
   cons.CANVAS.addEventListener('mousedown', (event: MouseEvent) => {
     const x = Math.floor((event.pageX - cons.CANVAS_LEFT) / cons.CELL_WIDTH)
     const y = Math.floor((event.pageY - cons.CANVAS_TOP)/ cons.CELL_WIDTH)
