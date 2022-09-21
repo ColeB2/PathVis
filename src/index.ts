@@ -4,10 +4,6 @@ import { breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm } from './algo
 
 
 
-
-
-
-
 function updateCanvas(arr: number[][], context: CanvasRenderingContext2D) {
   context.clearRect(0,0,cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT)
   arr.forEach((row, r) => {
@@ -155,35 +151,38 @@ function mouseMovementControls() {
 }
 
 
-function createGrid() {
-  for (let i=0; i < cons.GRID_HEIGHT; i++) {
+function createGrid(height: number, width: number, start: number[], end: number[]): number[][] {
+  const grid: number[][] = []
+  for (let i=0; i < height; i++) {
     let row: number[] = []
-    for (let j=0; j < cons.GRID_WIDTH; j++) {
-      if (j == myGlobal.start[0] && i == myGlobal.start[1]){
+    for (let j=0; j < width; j++) {
+      if (j === start[0] && i === start[1]){
         row.push(2)
-      } else if (j == myGlobal.end[0] && i == myGlobal.end[1]) {
+      } else if (j === end[0] && i === end[1]) {
         row.push(3)
       } else {
         row.push(0)
       }
     }
-    myGlobal.grid.push(row)
+    grid.push(row)
   }
+  return grid
 }
 
-function clearGrid() {
-  myGlobal.grid.forEach( (row : [], r : number) => {
-    row.forEach( (col: number, c: number) => {
+function clearGrid(grid: number[][]): number[][] {
+  grid.forEach((row: number[], r: number) => {
+    row.forEach((col: number, c: number) => {
       if (col === 2 || col === 3) {
       } else {
-        myGlobal.grid[r][c] = 0
+        grid[r][c] = 0
       }
     })
   })
+  return grid
 }
 
 function reset() {
-  clearGrid()
+  myGlobal.grid = clearGrid(myGlobal.grid)
   myGlobal.isRunning = false;
   myGlobal.generatorAlgo = null;
   myGlobal.algoSelected = false;
@@ -278,9 +277,11 @@ interface myGlobalVariables {
   [key: string]: any
 }
 var myGlobal: myGlobalVariables = {};
-myGlobal.grid = [];
+
+
 myGlobal.start = cons.DEFAULT_START
 myGlobal.end = cons.DEFAULT_END
+myGlobal.grid = createGrid(cons.GRID_HEIGHT, cons.GRID_WIDTH, myGlobal.start, myGlobal.end);
 
 
 myGlobal.isRunning = false;
@@ -290,7 +291,6 @@ myGlobal.algoSelected = false;
 myGlobal.delay = delaySlider.value;
 
 
-createGrid()
 updateCanvas(myGlobal.grid, cons.CTX)
 
 //Mouse controls
