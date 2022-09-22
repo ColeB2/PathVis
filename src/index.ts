@@ -1,5 +1,5 @@
 import * as cons from './constants';
-import { breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm } from './algorithms';
+import { aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm } from './algorithms';
 
 
 
@@ -232,6 +232,7 @@ const algoDict:any = {
   "depthFirstSearch": depthFirstSearch,
   "breadthFirstSearch": breadthFirstSearch,
   "dijkstrasAlgorithm": dijkstrasAlgorithm,
+  "aStarSearch": aStarSearch,
 }
 
 
