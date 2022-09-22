@@ -1,5 +1,5 @@
 import * as cons from "./constants.js";
-import {breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm} from "./algorithms.js";
+import {aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm} from "./algorithms.js";
 function updateCanvas(arr, context) {
   context.clearRect(0, 0, cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT);
   arr.forEach((row, r) => {
@@ -180,7 +180,8 @@ function selectAlgo(algo, grid) {
 const algoDict = {
   depthFirstSearch,
   breadthFirstSearch,
-  dijkstrasAlgorithm
+  dijkstrasAlgorithm,
+  aStarSearch
 };
 const algorithmSelectMenu = document.getElementById("algorithm-menu");
 function algorithmSelectFunction() {
