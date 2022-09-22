@@ -18,3 +18,9 @@ export const DEFAULT_END: number[] = [GRID_WIDTH-2, DEFAULT_STARTEND_HEIGHT]
 
 export const DFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
 export const BFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+
+//Clockwise Dirs
+export const DIRS1: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+export const DIRS2: number[][] = [[0,-1], [-1,0], [0,1], [1,0]]
+export const DIRS3: number[][] = [[1,0], [0,-1], [-1,0], [0,1]]
+export const DIRS4: number[][] = [[0,1], [1,0], [0,-1], [-1,0]]
