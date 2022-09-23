@@ -13,3 +13,7 @@ export const DEFAULT_START = [1, DEFAULT_STARTEND_HEIGHT];
 export const DEFAULT_END = [GRID_WIDTH - 2, DEFAULT_STARTEND_HEIGHT];
 export const DFS_DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 export const BFS_DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+export const DIRS1 = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+export const DIRS2 = [[0, -1], [-1, 0], [0, 1], [1, 0]];
+export const DIRS3 = [[1, 0], [0, -1], [-1, 0], [0, 1]];
+export const DIRS4 = [[0, 1], [1, 0], [0, -1], [-1, 0]];
