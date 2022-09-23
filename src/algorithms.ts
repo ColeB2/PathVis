@@ -196,24 +196,29 @@ export function* aStarSearch(grid: number[][], start: number[]) {
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_cell_id = (new_x*cons.GRID_WIDTH) + new_y
-            const distanceFromEnd: number = (
-                Math.abs(new_x - end[0]) +
-                Math.abs(new_y - end[1])
-                )
-            const h_n = distanceFromEnd * 2
             
-
             if (
                 inBounds(new_x, new_y) && unvisited.has(new_cell_id) &&
                 grid[new_y][new_x] !== 4
                 ) {
-                const weight = weightedGrid[new_y][new_x];
+
+                const distanceFromEnd: number = (
+                    Math.abs(new_x - end[0]) +
+                    Math.abs(new_y - end[1])
+                    )
+                const h_n = distanceFromEnd * 2
+                const cost = g_n + h_n
+                
+                
                 const new_path = path.slice()
                 new_path.push([new_x, new_y])
 
+                const weight = weightedGrid[new_y][new_x];
                 weightedGrid[new_y][new_x] = Math.min(g_n+1, weight)
-                let cost = (g_n + h_n)
-                h.add([cost, [new_x, new_y], new_path])
+
+                //Adding to OPEN heap.
+                let heap_item = [cost, [new_x, new_y], new_path, new_cell_id]
+                h.add(heap_item)
             }
         })
         unvisited.delete(cell_id)
