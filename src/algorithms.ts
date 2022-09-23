@@ -167,10 +167,9 @@ function createDijkstrasData(grid: number[][]) {
 //A* Algorithm
 export function* aStarSearch(grid: number[][], start: number[]) {
     const data: any[] = createDijkstrasData(grid)
-    const weightedGrid: number[][] = data[0]
+    const weightedGrid: number[][] = data[0] //g(n)
     const unvisited: Set<number> = data[1]
     const end: number[] = data[2]
-    console.log(data)
 
     let final_path = []
 
@@ -181,6 +180,7 @@ export function* aStarSearch(grid: number[][], start: number[]) {
         const [val, node, path] = h.pop()!
         const [cell_x, cell_y] = node
         const cell_id = (cell_x*cons.GRID_WIDTH) + cell_y
+        const g_n = weightedGrid[cell_y][cell_x]
 
         if (!unvisited.has(cell_id)) {continue}
 
@@ -200,6 +200,7 @@ export function* aStarSearch(grid: number[][], start: number[]) {
                 Math.abs(new_x - end[0]) +
                 Math.abs(new_y - end[1])
                 )
+            const h_n = distanceFromEnd * 2
             
 
             if (
@@ -210,12 +211,11 @@ export function* aStarSearch(grid: number[][], start: number[]) {
                 const new_path = path.slice()
                 new_path.push([new_x, new_y])
 
-            
-                weightedGrid[new_y][new_x] = Math.min(val+1+distanceFromEnd, weight, distanceFromEnd)
-                h.add([weightedGrid[new_y][new_x], [new_x, new_y], new_path])
+                weightedGrid[new_y][new_x] = Math.min(g_n+1, weight)
+                let cost = (g_n + h_n)
+                h.add([cost, [new_x, new_y], new_path])
             }
         })
-        console.log(weightedGrid)
         unvisited.delete(cell_id)
     }
     yield* animatePath(grid, final_path)
