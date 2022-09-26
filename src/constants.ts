@@ -11,7 +11,7 @@ export const CELL_WIDTH: number = CANVAS_WIDTH/20
 export const GRID_WIDTH: number = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
 export const GRID_HEIGHT: number = Math.floor(CANVAS_HEIGHT / CELL_WIDTH);
 
-export const DEFAULT_STARTEND_HEIGHT: number = Math.floor(GRID_WIDTH/2) - 1
+export const DEFAULT_STARTEND_HEIGHT: number = Math.floor(GRID_HEIGHT/2) - 1
 
 export const DEFAULT_START: number[] = [1, DEFAULT_STARTEND_HEIGHT]
 export const DEFAULT_END: number[] = [GRID_WIDTH-2, DEFAULT_STARTEND_HEIGHT]
