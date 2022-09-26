@@ -139,17 +139,37 @@ function clearGrid(grid) {
     });
   });
 }
-function reset() {
-  clearGrid(myGlobal.grid);
+function clearSearch(grid) {
+  grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (col === 2 || col === 3 || col === 4) {
+      } else {
+        grid[r][c] = 0;
+      }
+    });
+  });
+}
+function handleReset() {
   myGlobal.isRunning = false;
   myGlobal.generatorAlgo = null;
   myGlobal.algoSelected = false;
   pauseButton.innerText = "Start";
   pauseButton.classList.remove("button-paused");
+}
+function clearGame() {
+  clearSearch(myGlobal.grid);
+  handleReset();
+  updateCanvas(myGlobal.grid, cons.CTX);
+}
+function reset() {
+  clearGrid(myGlobal.grid);
+  handleReset();
   updateCanvas(myGlobal.grid, cons.CTX);
 }
 const resetButton = document.getElementById("reset");
 resetButton?.addEventListener("click", reset, false);
+const clearButton = document.getElementById("clear");
+clearButton?.addEventListener("click", clearGame, false);
 function pauseLoop() {
   if (myGlobal.isRunning) {
     pauseButton.innerText = "Start";

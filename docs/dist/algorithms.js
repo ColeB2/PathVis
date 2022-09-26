@@ -121,7 +121,6 @@ function createDijkstrasData(grid) {
     });
     new_grid.push(new_row);
   });
-  console.log(new_grid, unvisited, end);
   return [new_grid, unvisited, end];
 }
 export function* aStarSearch(grid, start) {
@@ -132,7 +131,6 @@ export function* aStarSearch(grid, start) {
   let final_path = [];
   const h = new Heap(compareFunc);
   h.add([0, start, []]);
-  console.log(grid, weightedGrid);
   while (!h.isEmpty) {
     const [val, node, path] = h.pop();
     const [cell_x, cell_y] = node;
