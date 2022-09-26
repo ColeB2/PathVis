@@ -6,7 +6,7 @@ export const CANVAS_WIDTH: number = CANVAS.width;
 export const CANVAS_HEIGHT: number = CANVAS.height;
 export const DELAY: number = 100;
 
-export const CELL_WIDTH: number = CANVAS_WIDTH/20
+export const CELL_WIDTH: number = 25//CANVAS_WIDTH/20
 
 export const GRID_WIDTH: number = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
 export const GRID_HEIGHT: number = Math.floor(CANVAS_HEIGHT / CELL_WIDTH);
