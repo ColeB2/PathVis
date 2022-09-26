@@ -9,7 +9,7 @@ export const DELAY: number = 100;
 export const CELL_WIDTH: number = CANVAS_WIDTH/20
 
 export const GRID_WIDTH: number = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
-export const GRID_HEIGHT: number = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
+export const GRID_HEIGHT: number = Math.floor(CANVAS_HEIGHT / CELL_WIDTH);
 
 export const DEFAULT_STARTEND_HEIGHT: number = Math.floor(GRID_WIDTH/2) - 1
 
