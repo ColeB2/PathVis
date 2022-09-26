@@ -74,7 +74,7 @@ export function* dijkstrasAlgorithm(grid, start) {
   while (!h.isEmpty) {
     const [val, node, path] = h.pop();
     const [cell_x, cell_y] = node;
-    const cell_id = cell_x * cons.GRID_WIDTH + cell_y;
+    const cell_id = cell_y * cons.GRID_WIDTH + cell_x;
     if (!unvisited.has(cell_id)) {
       continue;
     }
@@ -87,7 +87,7 @@ export function* dijkstrasAlgorithm(grid, start) {
     yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
-      const new_cell_id = new_x * cons.GRID_WIDTH + new_y;
+      const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
       if (inBounds(new_x, new_y) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const weight = weightedGrid[new_y][new_x];
         const new_path = path.slice();
@@ -121,6 +121,7 @@ function createDijkstrasData(grid) {
     });
     new_grid.push(new_row);
   });
+  console.log(new_grid, unvisited, end);
   return [new_grid, unvisited, end];
 }
 export function* aStarSearch(grid, start) {
@@ -131,10 +132,11 @@ export function* aStarSearch(grid, start) {
   let final_path = [];
   const h = new Heap(compareFunc);
   h.add([0, start, []]);
+  console.log(grid, weightedGrid);
   while (!h.isEmpty) {
     const [val, node, path] = h.pop();
     const [cell_x, cell_y] = node;
-    const cell_id = cell_x * cons.GRID_WIDTH + cell_y;
+    const cell_id = cell_y * cons.GRID_WIDTH + cell_x;
     const g_n = weightedGrid[cell_y][cell_x];
     if (!unvisited.has(cell_id)) {
       continue;
@@ -148,7 +150,7 @@ export function* aStarSearch(grid, start) {
     yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
-      const new_cell_id = new_x * cons.GRID_WIDTH + new_y;
+      const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
       if (inBounds(new_x, new_y) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const distanceFromEnd = Math.abs(new_x - end[0]) + Math.abs(new_y - end[1]);
         const h_n = distanceFromEnd * 2;
