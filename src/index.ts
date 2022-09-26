@@ -6,26 +6,32 @@ import { aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm }
 
 function updateCanvas(arr: number[][], context: CanvasRenderingContext2D): void {
   context.clearRect(0,0,cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT)
+  console.log(myGlobal.colors)
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
       switch(arr[r][c]) {
         case 0: // Open Node
-          context.fillStyle = "white"
+          // context.fillStyle = "white"
+          context.fillStyle = myGlobal.colors["openColor"]
           break
         case 1: // Searched Node
-          context.fillStyle = "black"
+          // context.fillStyle = "black"
+          context.fillStyle = myGlobal.colors["searchColor"]
           break
         case 2: // Start Node
-          context.fillStyle = "green"
+          // context.fillStyle = "green"
+          context.fillStyle = myGlobal.colors["startColor"]
           break
         case 3: // Ending Node
-          context.fillStyle = "red"
+          // context.fillStyle = "red"
+          context.fillStyle = myGlobal.colors["endColor"]
           break
         case 4: // Wall Node
-          context.fillStyle = "blue"
+          context.fillStyle = myGlobal.colors["wallColor"]
           break
         case 5: // Final Path Node
-          context.fillStyle = "yellow"
+          // context.fillStyle = "yellow"
+          context.fillStyle = myGlobal.colors["pathColor"]
           break
       }
       context.fillRect(c*cons.CELL_WIDTH, r*cons.CELL_WIDTH,
@@ -221,6 +227,27 @@ delaySliderOutput.innerHTML = delaySlider.value;
 delaySlider.addEventListener('input', changeSlider, false)
 
 
+//Color Selection Pickers
+function colorChoice(this:HTMLElement, ev: Event) {
+  console.log('THIS COLORCHOICE', this, ev)
+  console.log('HEREHERE', ev.target.id.toString())
+  console.log('this.value', this.value)
+
+	myGlobal.colors[ev.target.id.toString()] = this.value
+  updateCanvas(myGlobal.grid, cons.CTX)
+}
+
+const colorSelects = ["openColor", "searchColor", "startColor", "endColor", "pathColor", "wallColor"]
+function createColorSelects() {
+	colorSelects.forEach((color) => {
+		let newSelect: any = document.getElementById(color)
+    console.log(newSelect)
+		newSelect.addEventListener('input', colorChoice, false)
+		myGlobal.colors[color] = newSelect.value
+    
+	})
+}
+
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
@@ -277,7 +304,7 @@ interface myGlobalVariables {
 }
 var myGlobal: myGlobalVariables = {};
 
-
+myGlobal.colors = {}
 myGlobal.start = cons.DEFAULT_START
 myGlobal.end = cons.DEFAULT_END
 myGlobal.grid = createGrid(cons.GRID_HEIGHT, cons.GRID_WIDTH, myGlobal.start, myGlobal.end);
@@ -290,10 +317,12 @@ myGlobal.algoSelected = false;
 myGlobal.delay = delaySlider.value;
 
 
-updateCanvas(myGlobal.grid, cons.CTX)
+
 
 //Mouse controls
 mouseClick()
 mouseMovementControls();
 
+createColorSelects();
+updateCanvas(myGlobal.grid, cons.CTX)
 mainLoop();

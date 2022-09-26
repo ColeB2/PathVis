@@ -86,6 +86,11 @@ body {
     color: white;	
 }
 
+.colorcontainer {
+	width: 100%;
+	text-align: center;
+}
+
 /* SLIDER  https://www.w3schools.com/howto/howto_js_rangeslider.asp */
 #slider-container {
 	width: 100%; /* Width of the outside container */
