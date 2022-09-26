@@ -238,4 +238,5 @@ mouseClick();
 mouseMovementControls();
 createColorSelects();
 updateCanvas(myGlobal.grid, cons.CTX);
+console.log(cons.GRID_WIDTH, cons.GRID_HEIGHT, myGlobal.grid);
 mainLoop();
