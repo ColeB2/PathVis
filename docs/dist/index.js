@@ -2,7 +2,6 @@ import * as cons from "./constants.js";
 import {aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm} from "./algorithms.js";
 function updateCanvas(arr, context) {
   context.clearRect(0, 0, cons.CANVAS_WIDTH, cons.CANVAS_HEIGHT);
-  console.log(myGlobal.colors);
   arr.forEach((row, r) => {
     row.forEach((col, c) => {
       switch (arr[r][c]) {
@@ -174,17 +173,14 @@ const delaySliderOutput = document.getElementById("delayValue");
 delaySliderOutput.innerHTML = delaySlider.value;
 delaySlider.addEventListener("input", changeSlider, false);
 function colorChoice(ev) {
-  console.log("THIS COLORCHOICE", this, ev);
-  console.log("HEREHERE", ev.target.id.toString());
-  console.log("this.value", this.value);
-  myGlobal.colors[ev.target.id.toString()] = this.value;
+  const element = ev.target;
+  myGlobal.colors[element.id.toString()] = element.value;
   updateCanvas(myGlobal.grid, cons.CTX);
 }
 const colorSelects = ["openColor", "searchColor", "startColor", "endColor", "pathColor", "wallColor"];
 function createColorSelects() {
   colorSelects.forEach((color) => {
     let newSelect = document.getElementById(color);
-    console.log(newSelect);
     newSelect.addEventListener("input", colorChoice, false);
     myGlobal.colors[color] = newSelect.value;
   });
