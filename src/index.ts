@@ -180,18 +180,42 @@ function clearGrid(grid: number[][]): void {
   })
 }
 
-function reset():void {
-  clearGrid(myGlobal.grid)
+function clearSearch(grid: number[][]): void {
+  grid.forEach((row: number[], r: number) => {
+    row.forEach((col: number, c: number) => {
+      if (col === 2 || col === 3 || col === 4) {
+      } else {
+        grid[r][c] = 0
+      }
+    })
+  })
+}
+
+function handleReset(): void {
   myGlobal.isRunning = false;
   myGlobal.generatorAlgo = null;
   myGlobal.algoSelected = false;
   pauseButton.innerText = 'Start'
   pauseButton.classList.remove('button-paused')
+}
+
+function clearGame(): void {
+  clearSearch(myGlobal.grid)
+  handleReset()
+  updateCanvas(myGlobal.grid, cons.CTX)
+}
+
+function reset():void {
+  clearGrid(myGlobal.grid)
+  handleReset()
   updateCanvas(myGlobal.grid, cons.CTX)
 }
 
 const resetButton: HTMLElement = document.getElementById('reset')!
 resetButton?.addEventListener('click', reset, false)
+
+const clearButton: HTMLElement = document.getElementById('clear')!
+clearButton?.addEventListener('click', clearGame, false)
 
 function pauseLoop() {
   if (myGlobal.isRunning) {
