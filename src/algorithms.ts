@@ -100,7 +100,7 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
     while (!h.isEmpty) {
         const [val, node, path] = h.pop()!
         const [cell_x, cell_y] = node
-        const cell_id = (cell_x*cons.GRID_WIDTH) + cell_y
+        const cell_id = (cell_y*cons.GRID_WIDTH) + cell_x
 
         if (!unvisited.has(cell_id)) {continue}
 
@@ -115,7 +115,7 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
-            const new_cell_id = (new_x*cons.GRID_WIDTH) + new_y
+            const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
             
 
             if (
@@ -160,6 +160,7 @@ function createDijkstrasData(grid: number[][]) {
         })
     new_grid.push(new_row)
     })
+    console.log(new_grid, unvisited, end)
     return [new_grid, unvisited, end]
 }
 
@@ -176,10 +177,11 @@ export function* aStarSearch(grid: number[][], start: number[]) {
     const h = new Heap(compareFunc)
     h.add([0,start, []])
 
+    console.log(grid, weightedGrid)
     while (!h.isEmpty) {
         const [val, node, path] = h.pop()!
         const [cell_x, cell_y] = node
-        const cell_id = (cell_x*cons.GRID_WIDTH) + cell_y
+        const cell_id = (cell_y*cons.GRID_WIDTH) + cell_x
         const g_n = weightedGrid[cell_y][cell_x]
 
         if (!unvisited.has(cell_id)) {continue}
@@ -195,7 +197,7 @@ export function* aStarSearch(grid: number[][], start: number[]) {
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
-            const new_cell_id = (new_x*cons.GRID_WIDTH) + new_y
+            const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
             
             if (
                 inBounds(new_x, new_y) && unvisited.has(new_cell_id) &&
