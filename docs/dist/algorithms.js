@@ -1,13 +1,15 @@
 import * as cons from "./constants.js";
 import {Queue} from "./queue.js";
 import {Heap} from "./heap.js";
-function inBounds(x, y) {
-  if (x >= 0 && x < cons.GRID_WIDTH && y >= 0 && y < cons.GRID_HEIGHT) {
+function inBounds(x, y, gridWidth, gridHeight) {
+  if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
     return true;
   }
   return false;
 }
 export function* depthFirstSearch(grid, start) {
+  const gridWidth = grid[0].length;
+  const gridHeight = grid.length;
   const stack = [[[], start]];
   let final_path = [];
   while (stack.length > 0) {
@@ -23,7 +25,7 @@ export function* depthFirstSearch(grid, start) {
     cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_path = path.slice();
-      if (inBounds(new_x, new_y) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)) {
+      if (inBounds(new_x, new_y, gridWidth, gridHeight) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)) {
         new_path.push([new_x, new_y]);
         stack.push([new_path, [new_x, new_y]]);
       }
@@ -33,6 +35,8 @@ export function* depthFirstSearch(grid, start) {
   yield [grid, final_path];
 }
 export function* breadthFirstSearch(grid, start) {
+  const gridWidth = grid[0].length;
+  const gridHeight = grid.length;
   const q = new Queue([[[], start]]);
   const visited = new Set();
   let final_path = [];
@@ -48,9 +52,9 @@ export function* breadthFirstSearch(grid, start) {
     yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
-      const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
+      const new_cell_id = new_y * gridWidth + new_x;
       const new_path = path.slice();
-      if (inBounds(new_x, new_y) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3) && !visited.has(new_cell_id)) {
+      if (inBounds(new_x, new_y, gridWidth, gridHeight) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3) && !visited.has(new_cell_id)) {
         visited.add(new_cell_id);
         new_path.push([new_x, new_y]);
         q.enqueue([new_path, [new_x, new_y]]);
@@ -65,6 +69,8 @@ function compareFunc(a, b) {
   return ret;
 }
 export function* dijkstrasAlgorithm(grid, start) {
+  const gridWidth = grid[0].length;
+  const gridHeight = grid.length;
   const data = createDijkstrasData(grid);
   const weightedGrid = data[0];
   const unvisited = data[1];
@@ -74,7 +80,7 @@ export function* dijkstrasAlgorithm(grid, start) {
   while (!h.isEmpty) {
     const [val, node, path] = h.pop();
     const [cell_x, cell_y] = node;
-    const cell_id = cell_y * cons.GRID_WIDTH + cell_x;
+    const cell_id = cell_y * gridWidth + cell_x;
     if (!unvisited.has(cell_id)) {
       continue;
     }
@@ -87,8 +93,8 @@ export function* dijkstrasAlgorithm(grid, start) {
     yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
-      const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
-      if (inBounds(new_x, new_y) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
+      const new_cell_id = new_y * gridWidth + new_x;
+      if (inBounds(new_x, new_y, gridWidth, gridHeight) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const weight = weightedGrid[new_y][new_x];
         const new_path = path.slice();
         new_path.push([new_x, new_y]);
@@ -102,13 +108,15 @@ export function* dijkstrasAlgorithm(grid, start) {
   yield [grid, final_path];
 }
 function createDijkstrasData(grid) {
+  const gridWidth = grid[0].length;
+  const gridHeight = grid.length;
   let new_grid = [];
   let unvisited = new Set();
   let end = [];
   grid.forEach((row, r) => {
     let new_row = [];
     row.forEach((col, c) => {
-      const cell_id = r * cons.GRID_WIDTH + c;
+      const cell_id = r * gridWidth + c;
       unvisited.add(cell_id);
       if (grid[r][c] === 3) {
         end = [c, r];
@@ -124,6 +132,8 @@ function createDijkstrasData(grid) {
   return [new_grid, unvisited, end];
 }
 export function* aStarSearch(grid, start) {
+  const gridWidth = grid[0].length;
+  const gridHeight = grid.length;
   const data = createDijkstrasData(grid);
   const weightedGrid = data[0];
   const unvisited = data[1];
@@ -134,7 +144,7 @@ export function* aStarSearch(grid, start) {
   while (!h.isEmpty) {
     const [val, node, path] = h.pop();
     const [cell_x, cell_y] = node;
-    const cell_id = cell_y * cons.GRID_WIDTH + cell_x;
+    const cell_id = cell_y * gridWidth + cell_x;
     const g_n = weightedGrid[cell_y][cell_x];
     if (!unvisited.has(cell_id)) {
       continue;
@@ -148,8 +158,8 @@ export function* aStarSearch(grid, start) {
     yield [grid, false];
     cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
-      const new_cell_id = new_y * cons.GRID_WIDTH + new_x;
-      if (inBounds(new_x, new_y) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
+      const new_cell_id = new_y * gridWidth + new_x;
+      if (inBounds(new_x, new_y, gridWidth, gridHeight) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const distanceFromEnd = Math.abs(new_x - end[0]) + Math.abs(new_y - end[1]);
         const h_n = distanceFromEnd * 2;
         const cost = g_n + h_n;
