@@ -324,29 +324,31 @@ interface myGlobalVariables {
 var myGlobal: myGlobalVariables = {};
 
 function updateGlobalCanvas() {
+  myGlobal.cellWidth = 25;
   myGlobal.canvas = document.getElementById("canvas") as HTMLCanvasElement;
 
-  myGlobal.canvas.width = 1000
-  myGlobal.canvas.height = 550
+  // const calcWidth = Math.floor((0.8 * window.innerWidth)/myGlobal.cellWidth)* myGlobal.cellWidth
+  // myGlobal.canvas.width = 750
+  // myGlobal.canvas.height = 550
 
   myGlobal.ctx = myGlobal.canvas.getContext("2d")
   myGlobal.canvasLeft = myGlobal.canvas.offsetLeft + myGlobal.canvas.clientLeft;
   myGlobal.canvasTop = myGlobal.canvas.offsetTop + myGlobal.canvas.clientTop;
-  myGlobal.cellWidth = 25;
   myGlobal.gridWidth = Math.floor(myGlobal.canvas.width / myGlobal.cellWidth)
   myGlobal.gridHeight = Math.floor(myGlobal.canvas.height / myGlobal.cellWidth)
-  console.log(myGlobal.canvas.width, window.innerWidth, window.outerWidth, myGlobal.gridWidth)
-  console.log(myGlobal.gridWidth, Math.floor(myGlobal.canvas.width / myGlobal.cellWidth))
-  console.log((myGlobal.canvas.width / myGlobal.cellWidth))
+
 }
 updateGlobalCanvas()
-window.addEventListener('resize', updateGlobalCanvas, false)
+
 
 myGlobal.colors = {}
-myGlobal.start = cons.DEFAULT_START
-myGlobal.end = cons.DEFAULT_END
+myGlobal.defaultStartEndHeight = Math.floor(myGlobal.gridHeight/2) - 1
+myGlobal.start = [1, myGlobal.defaultStartEndHeight]
+myGlobal.end = [myGlobal.gridWidth-2, myGlobal.defaultStartEndHeight]
 myGlobal.grid = createGrid(myGlobal.gridHeight, myGlobal.gridWidth, myGlobal.start, myGlobal.end);
 
+
+window.addEventListener('resize', updateGlobalCanvas, false)
 
 myGlobal.isRunning = false;
 myGlobal.generatorAlgo = null;
@@ -356,28 +358,10 @@ myGlobal.delay = delaySlider.value;
 
 
 
-
-
-// export const GRID_WIDTH: number = Math.floor(CANVAS_WIDTH / CELL_WIDTH);
-// export const GRID_HEIGHT: number = Math.floor(CANVAS_HEIGHT / CELL_WIDTH);
-
-// export const DEFAULT_STARTEND_HEIGHT: number = Math.floor(GRID_HEIGHT/2) - 1
-// export const CANVAS = document.getElementById("canvas") as HTMLCanvasElement;
-// export const CTX = CANVAS.getContext("2d") as CanvasRenderingContext2D;
-// export const CANVAS_LEFT: number = CANVAS.offsetLeft + CANVAS.clientLeft;
-// export const CANVAS_TOP: number = CANVAS.offsetTop + CANVAS.clientTop;
-// export const CANVAS_WIDTH: number = CANVAS.width;
-// export const CANVAS_HEIGHT: number = CANVAS.height;
-// export const DELAY: number = 100;
-
-
-
-
 //Mouse controls
 mouseClick()
 mouseMovementControls();
 
 createColorSelects();
 updateCanvas(myGlobal.grid, myGlobal.ctx)
-// console.log(cons.GRID_WIDTH, cons.GRID_HEIGHT, myGlobal.grid)
 mainLoop();
