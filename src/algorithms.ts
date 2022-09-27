@@ -2,14 +2,16 @@ import * as cons from './constants';
 import { Queue } from './queue';
 import { Heap } from './heap';
 
-function inBounds(x: number, y: number) {
-    if (x >= 0 && x < cons.GRID_WIDTH && y >= 0 && y < cons.GRID_HEIGHT) {
+function inBounds(x: number, y: number, gridWidth:number, gridHeight: number) {
+    if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
         return true;
     }
     return false;
 }
 
 export function* depthFirstSearch(grid: number[][], start: number[]) {
+    const gridWidth = grid[0].length
+    const gridHeight = grid.length
 
     const stack: any[][] = [ [[],start] ]
     let final_path: number[][] = []
@@ -31,10 +33,12 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_path = path.slice()
 
-            if (inBounds(new_x, new_y) && (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)) {
-                new_path.push([new_x, new_y])
-                stack.push([new_path,[new_x,new_y]])
-            }
+            if (inBounds(new_x, new_y, gridWidth, gridHeight) && 
+                (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3)
+                ) {
+                    new_path.push([new_x, new_y])
+                    stack.push([new_path,[new_x,new_y]])
+                }
         })
     }
     yield* animatePath(grid, final_path)
@@ -43,6 +47,8 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
 
 
 export function* breadthFirstSearch(grid: number[][], start: number[]) {
+    const gridWidth = grid[0].length
+    const gridHeight = grid.length
 
     const q = new Queue([ [[],start] ])
     const visited = new Set<number>;
@@ -63,11 +69,11 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
-            const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
+            const new_cell_id = (new_y*gridWidth) + new_x
             const new_path = path.slice()
 
             if (
-                inBounds(new_x, new_y) && 
+                inBounds(new_x, new_y, gridWidth, gridHeight) && 
                 (grid[new_y][new_x] === 0 || grid[new_y][new_x] === 3) &&
                 !visited.has(new_cell_id)
                 ) {
@@ -88,6 +94,8 @@ function compareFunc(a: any[], b: any[]) {
 }
 
 export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
+    const gridWidth = grid[0].length
+    const gridHeight = grid.length
     const data: any[] = createDijkstrasData(grid)
     const weightedGrid: number[][] = data[0]
     const unvisited: Set<number> = data[1]
@@ -100,7 +108,7 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
     while (!h.isEmpty) {
         const [val, node, path] = h.pop()!
         const [cell_x, cell_y] = node
-        const cell_id = (cell_y*cons.GRID_WIDTH) + cell_x
+        const cell_id = (cell_y*gridWidth) + cell_x
 
         if (!unvisited.has(cell_id)) {continue}
 
@@ -115,11 +123,11 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
-            const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
+            const new_cell_id = (new_y*gridWidth) + new_x
             
 
             if (
-                inBounds(new_x, new_y) && unvisited.has(new_cell_id) &&
+                inBounds(new_x, new_y, gridWidth, gridHeight) && unvisited.has(new_cell_id) &&
                 grid[new_y][new_x] !== 4
                 ) {
                 const weight = weightedGrid[new_y][new_x];
@@ -137,6 +145,9 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
 }
 
 function createDijkstrasData(grid: number[][]) {
+    const gridWidth = grid[0].length
+    const gridHeight = grid.length
+    
     let new_grid: number[][] = [];
     let unvisited: Set<number> = new Set()
     let end: number[] = []; 
@@ -144,7 +155,7 @@ function createDijkstrasData(grid: number[][]) {
     grid.forEach((row, r) => {
         let new_row: number[] = [];
         row.forEach((col, c) => {
-            const cell_id = (r*cons.GRID_WIDTH) + c
+            const cell_id = (r*gridWidth) + c
             unvisited.add(cell_id)
 
             if (grid[r][c] === 3) {
@@ -166,6 +177,8 @@ function createDijkstrasData(grid: number[][]) {
 
 //A* Algorithm
 export function* aStarSearch(grid: number[][], start: number[]) {
+    const gridWidth = grid[0].length
+    const gridHeight = grid.length
     const data: any[] = createDijkstrasData(grid)
     const weightedGrid: number[][] = data[0] //g(n)
     const unvisited: Set<number> = data[1]
@@ -179,7 +192,7 @@ export function* aStarSearch(grid: number[][], start: number[]) {
     while (!h.isEmpty) {
         const [val, node, path] = h.pop()!
         const [cell_x, cell_y] = node
-        const cell_id = (cell_y*cons.GRID_WIDTH) + cell_x
+        const cell_id = (cell_y*gridWidth) + cell_x
         const g_n = weightedGrid[cell_y][cell_x]
 
         if (!unvisited.has(cell_id)) {continue}
@@ -195,10 +208,10 @@ export function* aStarSearch(grid: number[][], start: number[]) {
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
-            const new_cell_id = (new_y*cons.GRID_WIDTH) + new_x
+            const new_cell_id = (new_y*gridWidth) + new_x
             
             if (
-                inBounds(new_x, new_y) && unvisited.has(new_cell_id) &&
+                inBounds(new_x, new_y, gridWidth, gridHeight) && unvisited.has(new_cell_id) &&
                 grid[new_y][new_x] !== 4
                 ) {
 
