@@ -198,7 +198,8 @@ function clearSearch(grid: number[][]): void {
 
 function handleReset(): void {
   myGlobal.isRunning = false;
-  myGlobal.generatorAlgo = null;
+  myGlobal.i = 0
+  myGlobal.animation = null;
   myGlobal.algoSelected = false;
   pauseButton.innerText = 'Start'
   pauseButton.classList.remove('button-paused')
@@ -226,9 +227,14 @@ function pauseLoop() {
   if (myGlobal.isRunning) {
     pauseButton.innerText = 'Start';
     pauseButton.classList.remove('button-paused');
+    algorithmSelectMenu.disabled = false
+    console.log(algorithmSelectMenu)
   } else {
     pauseButton.innerText = 'Pause';
     pauseButton.classList.add('button-paused');
+    
+    algorithmSelectMenu.disabled = true
+    console.log(algorithmSelectMenu)
     algorithmSelectFunction();
   }
   myGlobal.isRunning = !myGlobal.isRunning;
@@ -270,7 +276,8 @@ function createColorSelects() {
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
-  myGlobal.animation = algo(grid, myGlobal.start)
+    clearGame()
+    myGlobal.animation = algo(grid, myGlobal.start)
 	}
 }
 
@@ -286,6 +293,7 @@ const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
   if (myGlobal.animation === null || option != myGlobal.algoSelected) {
+    console.log('Changing algo')
     myGlobal.algoSelected = option
     selectAlgo(myGlobal.algoSelected, myGlobal.grid)
   }
@@ -304,7 +312,6 @@ function mainLoop() {
             window.requestAnimationFrame(main);
           }, myGlobal.delay)
         } else {
-          myGlobal.algorithm = null;
           myGlobal.algoSelected = false;
           myGlobal.animation = null;
           myGlobal.i = 0
@@ -353,7 +360,6 @@ myGlobal.grid = createGrid(myGlobal.gridHeight, myGlobal.gridWidth, myGlobal.sta
 window.addEventListener('resize', updateGlobalCanvas, false)
 
 myGlobal.isRunning = false;
-myGlobal.generatorAlgo = null;
 myGlobal.algoSelected = false;
 
 myGlobal.delay = delaySlider.value;
