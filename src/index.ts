@@ -270,7 +270,7 @@ function createColorSelects() {
 
 function selectAlgo(algo: any, grid: number[][]) {
 	if (algo) {
-	myGlobal.generatorAlgo = algo(grid, myGlobal.start)
+  myGlobal.animation = algo(grid, myGlobal.start)
 	}
 }
 
@@ -285,7 +285,7 @@ const algoDict:any = {
 const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
-  if (myGlobal.algoSelected === false || option != myGlobal.algoSelected) {
+  if (myGlobal.animation === null || option != myGlobal.algoSelected) {
     myGlobal.algoSelected = option
     selectAlgo(myGlobal.algoSelected, myGlobal.grid)
   }
@@ -294,18 +294,20 @@ function algorithmSelectFunction () {
 function mainLoop() {
   function main() {
     if (myGlobal.isRunning) {
-      if (myGlobal.generatorAlgo !== null) {
-        let algoResults = myGlobal.generatorAlgo.next()
+      if (myGlobal.animation !== null) {
 
-        if (!algoResults.done) {
-          let [newGrid, path] = algoResults['value']
+        if (myGlobal.i !== myGlobal.animation.length) {
+          let newGrid = myGlobal.animation[myGlobal.i]
           updateCanvas(newGrid, myGlobal.ctx)
+          myGlobal.i += 1
           setTimeout ( () => {
             window.requestAnimationFrame(main);
           }, myGlobal.delay)
         } else {
-          myGlobal.generatorAlgo = null;
+          myGlobal.algorithm = null;
           myGlobal.algoSelected = false;
+          myGlobal.animation = null;
+          myGlobal.i = 0
           pauseLoop();
         }
       }
@@ -355,6 +357,8 @@ myGlobal.generatorAlgo = null;
 myGlobal.algoSelected = false;
 
 myGlobal.delay = delaySlider.value;
+myGlobal.i = 0
+myGlobal.animation = null
 
 
 

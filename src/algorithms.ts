@@ -9,9 +9,11 @@ function inBounds(x: number, y: number, gridWidth:number, gridHeight: number) {
     return false;
 }
 
-export function* depthFirstSearch(grid: number[][], start: number[]) {
+export function depthFirstSearch(grid: number[][], start: number[]) {
     const gridWidth = grid[0].length
     const gridHeight = grid.length
+
+    const animation = []
 
     const stack: any[][] = [ [[],start] ]
     let final_path: number[][] = []
@@ -27,7 +29,7 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield [grid, false];
+        animation.push(window.structuredClone(grid))
 
         cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -41,14 +43,18 @@ export function* depthFirstSearch(grid: number[][], start: number[]) {
                 }
         })
     }
-    yield* animatePath(grid, final_path)
-    yield [grid, final_path];
+    // let g = animatePath(grid, final_path)
+    let g = instantAnimatePath(grid, final_path)
+    animation.push(...g)
+    return(animation)
 }
 
 
-export function* breadthFirstSearch(grid: number[][], start: number[]) {
+export function breadthFirstSearch(grid: number[][], start: number[]) {
     const gridWidth = grid[0].length
     const gridHeight = grid.length
+
+    const animation = []
 
     const q = new Queue([ [[],start] ])
     const visited = new Set<number>;
@@ -65,7 +71,7 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield [grid, false];
+        animation.push(window.structuredClone(grid))
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -83,8 +89,9 @@ export function* breadthFirstSearch(grid: number[][], start: number[]) {
             }
         })
     }
-    yield* animatePath(grid, final_path)
-    yield [grid, final_path];
+    let g = animatePath(grid, final_path)
+    animation.push(...g)
+    return(animation)
 }
 
 
@@ -93,9 +100,12 @@ function compareFunc(a: any[], b: any[]) {
     return ret;
 }
 
-export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
+export function dijkstrasAlgorithm (grid: number[][], start: number[]) {
     const gridWidth = grid[0].length
     const gridHeight = grid.length
+
+    const animation = []
+
     const data: any[] = createDijkstrasData(grid)
     const weightedGrid: number[][] = data[0]
     const unvisited: Set<number> = data[1]
@@ -119,7 +129,7 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield [grid, false];
+        animation.push(window.structuredClone(grid))
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -140,8 +150,9 @@ export function* dijkstrasAlgorithm (grid: number[][], start: number[]) {
         })
         unvisited.delete(cell_id)
     }
-    yield* animatePath(grid, final_path)
-    yield [grid, final_path];
+    let g = instantAnimatePath(grid, final_path)
+    animation.push(...g)
+    return(animation)
 }
 
 function createDijkstrasData(grid: number[][]) {
@@ -176,9 +187,12 @@ function createDijkstrasData(grid: number[][]) {
 
 
 //A* Algorithm
-export function* aStarSearch(grid: number[][], start: number[]) {
+export function aStarSearch(grid: number[][], start: number[]) {
     const gridWidth = grid[0].length
     const gridHeight = grid.length
+
+    const animation = []
+
     const data: any[] = createDijkstrasData(grid)
     const weightedGrid: number[][] = data[0] //g(n)
     const unvisited: Set<number> = data[1]
@@ -204,7 +218,7 @@ export function* aStarSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        yield [grid, false];
+        animation.push(window.structuredClone(grid))
 
         cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -236,17 +250,32 @@ export function* aStarSearch(grid: number[][], start: number[]) {
         })
         unvisited.delete(cell_id)
     }
-    yield* animatePath(grid, final_path)
-    yield [grid, final_path];
+    let g = instantAnimatePath(grid, final_path)
+    animation.push(...g)
+    return(animation)
 }
 
 
-function* animatePath(grid: number[][], path: number[][]) {
+function animatePath(grid: number[][], path: number[][]) {
+    let return_grid = []
     for(let i = 0; i < path.length; i++) {
         const [x, y] = path[i];
         if (grid[y][x] === 1) {
             grid[y][x] = 5
-            yield [grid, path];
+            return_grid.push(window.structuredClone(grid))
+            
         }
     }
+    return return_grid
+  }
+
+  function instantAnimatePath(grid: number[][], path: number[][]) {
+    for(let i = 0; i < path.length; i++) {
+        const [x, y] = path[i];
+        if (grid[y][x] === 1) {
+            grid[y][x] = 5
+            
+        }
+    }
+    return [window.structuredClone(grid)]
   }
