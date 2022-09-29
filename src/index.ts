@@ -103,7 +103,13 @@ function _shiftEnd(event: MouseEvent): void {
           myGlobal.grid[myGlobal.end[1]][myGlobal.end[0]] = 0
           myGlobal.grid[r][c] = 3
           myGlobal.end = [c,r]
-          updateCanvas(myGlobal.grid, myGlobal.ctx)
+          if (!myGlobal.isRunning && myGlobal.animation.length !== 0) {
+            algorithmSelectFunction()
+            myGlobal.i = myGlobal.animation.length - 1
+            updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx)
+          } else {
+            updateCanvas(myGlobal.grid, myGlobal.ctx)
+          }
         }
     })
   })
