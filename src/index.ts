@@ -241,13 +241,10 @@ function pauseLoop() {
     pauseButton.innerText = 'Start';
     pauseButton.classList.remove('button-paused');
     algorithmSelectMenu.disabled = false
-    console.log(algorithmSelectMenu)
   } else {
     pauseButton.innerText = 'Pause';
     pauseButton.classList.add('button-paused');
-    
     algorithmSelectMenu.disabled = true
-    console.log(algorithmSelectMenu)
     algorithmSelectFunction();
   }
   myGlobal.isRunning = !myGlobal.isRunning;
@@ -314,8 +311,7 @@ const algoDict:any = {
 const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
-  if (myGlobal.animation.length === 1 || option != myGlobal.algoSelected) {
-    console.log('Changing algo')
+  if (myGlobal.animation.length >= 1 || option != myGlobal.algoSelected) {
     myGlobal.algoSelected = option
     selectAlgo(myGlobal.algoSelected, myGlobal.grid)
   }
@@ -323,7 +319,6 @@ function algorithmSelectFunction () {
 
 function mainLoop() {
   function main() {
-    console.log(myGlobal.i, myGlobal.animation.length, myGlobal. isRunning, myGlobal.animation)
     if (myGlobal.isRunning) {
       if (myGlobal.animation.length !== 0) {
 
