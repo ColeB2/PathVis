@@ -41,7 +41,7 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D): void 
 
 // Mouse Controls
 function mouseClick(): void {
-  cons.CANVAS.addEventListener('click', (event: MouseEvent) => {
+  myGlobal.canvas.addEventListener('click', (event: MouseEvent) => {
     const x = event.pageX - myGlobal.canvasLeft;
     const y = event.pageY - myGlobal.canvasTop;
     const CELL_WIDTH = myGlobal.cellWidth
@@ -279,7 +279,7 @@ delaySlider.addEventListener('input', changeSlider, false)
 function colorChoice(this:HTMLInputElement, ev:Event) {
   const element = ev.target as HTMLInputElement
 	myGlobal.colors[element.id.toString()] = element.value
-  updateCanvas(myGlobal.grid, cons.CTX)
+  updateCanvas(myGlobal.grid, myGlobal.ctx)
 }
 
 const colorSelects = ["openColor", "searchColor", "startColor", "endColor", "pathColor", "wallColor"]
@@ -350,6 +350,9 @@ interface myGlobalVariables {
 }
 var myGlobal: myGlobalVariables = {};
 
+//Functino used to when resizing the window
+//After resize, recalculates the grid, so that mouse controls work
+//As Expected.
 function updateGlobalCanvas() {
   myGlobal.cellWidth = 25;
   myGlobal.canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -363,7 +366,6 @@ function updateGlobalCanvas() {
   myGlobal.canvasTop = myGlobal.canvas.offsetTop + myGlobal.canvas.clientTop;
   myGlobal.gridWidth = Math.floor(myGlobal.canvas.width / myGlobal.cellWidth)
   myGlobal.gridHeight = Math.floor(myGlobal.canvas.height / myGlobal.cellWidth)
-
 }
 updateGlobalCanvas()
 
@@ -379,7 +381,6 @@ window.addEventListener('resize', updateGlobalCanvas, false)
 
 myGlobal.isRunning = false;
 myGlobal.algoSelected = false;
-
 myGlobal.delay = delaySlider.value;
 myGlobal.i = 0
 myGlobal.animation = []
@@ -390,6 +391,7 @@ myGlobal.animation = []
 mouseClick()
 mouseMovementControls();
 
+// Initial Start Up
 createColorSelects();
 updateCanvas(myGlobal.grid, myGlobal.ctx)
 mainLoop();

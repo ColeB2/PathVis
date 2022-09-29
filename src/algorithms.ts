@@ -1,6 +1,12 @@
-import * as cons from './constants';
 import { Queue } from './queue';
 import { Heap } from './heap';
+
+const DFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+const BFS_DIRS: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+const DIRS1: number[][] = [[-1,0], [0,1], [1,0], [0,-1]]
+const DIRS2: number[][] = [[0,-1], [-1,0], [0,1], [1,0]]
+const DIRS3: number[][] = [[1,0], [0,-1], [-1,0], [0,1]]
+const DIRS4: number[][] = [[0,1], [1,0], [0,-1], [-1,0]]
 
 function inBounds(x: number, y: number, gridWidth:number, gridHeight: number) {
     if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
@@ -31,7 +37,7 @@ export function depthFirstSearch(grid: number[][], start: number[]) {
         
         animation.push(window.structuredClone(grid))
 
-        cons.DFS_DIRS.forEach(([dir_x, dir_y]) => {
+        DFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_path = path.slice()
 
@@ -72,7 +78,7 @@ export function breadthFirstSearch(grid: number[][], start: number[]) {
         
         animation.push(window.structuredClone(grid))
 
-        cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
+        BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_cell_id = (new_y*gridWidth) + new_x
             const new_path = path.slice()
@@ -130,7 +136,7 @@ export function dijkstrasAlgorithm (grid: number[][], start: number[]) {
         
         animation.push(window.structuredClone(grid))
 
-        cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
+        BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_cell_id = (new_y*gridWidth) + new_x
             
@@ -219,7 +225,7 @@ export function aStarSearch(grid: number[][], start: number[]) {
         
         animation.push(window.structuredClone(grid))
 
-        cons.BFS_DIRS.forEach(([dir_x, dir_y]) => {
+        BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
             const new_cell_id = (new_y*gridWidth) + new_x
             
