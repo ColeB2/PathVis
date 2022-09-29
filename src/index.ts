@@ -199,7 +199,7 @@ function clearSearch(grid: number[][]): void {
 function handleReset(): void {
   myGlobal.isRunning = false;
   myGlobal.i = 0
-  myGlobal.animation = null;
+  myGlobal.animation = [];
   myGlobal.algoSelected = false;
   pauseButton.innerText = 'Start'
   pauseButton.classList.remove('button-paused')
@@ -243,6 +243,15 @@ function pauseLoop() {
 
 const pauseButton: HTMLElement  = document.getElementById('pause')!
 pauseButton?.addEventListener('click', pauseLoop, false)
+
+
+function instantFunc() {
+  myGlobal.i = myGlobal.animation.length-1
+  updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx)
+}
+
+const instantButton: HTMLElement = document.getElementById('instant')!
+instantButton?.addEventListener('click', instantFunc, false)
 
 
 function changeSlider() {
@@ -292,7 +301,7 @@ const algoDict:any = {
 const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
-  if (myGlobal.animation === null || option != myGlobal.algoSelected) {
+  if (myGlobal.animation.length === 1 || option != myGlobal.algoSelected) {
     console.log('Changing algo')
     myGlobal.algoSelected = option
     selectAlgo(myGlobal.algoSelected, myGlobal.grid)
@@ -301,19 +310,20 @@ function algorithmSelectFunction () {
 
 function mainLoop() {
   function main() {
+    console.log(myGlobal.i, myGlobal.animation.length, myGlobal.animation)
     if (myGlobal.isRunning) {
-      if (myGlobal.animation !== null) {
+      if (myGlobal.animation.length !== 0) {
 
         if (myGlobal.i !== myGlobal.animation.length) {
           let newGrid = myGlobal.animation[myGlobal.i]
-          updateCanvas(newGrid, myGlobal.ctx)
+          myGlobal.grid = newGrid
+          updateCanvas(myGlobal.grid, myGlobal.ctx)
           myGlobal.i += 1
           setTimeout ( () => {
             window.requestAnimationFrame(main);
           }, myGlobal.delay)
         } else {
           myGlobal.algoSelected = false;
-          myGlobal.animation = null;
           myGlobal.i = 0
           pauseLoop();
         }
@@ -364,7 +374,7 @@ myGlobal.algoSelected = false;
 
 myGlobal.delay = delaySlider.value;
 myGlobal.i = 0
-myGlobal.animation = null
+myGlobal.animation = []
 
 
 

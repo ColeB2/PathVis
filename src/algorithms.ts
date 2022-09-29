@@ -43,8 +43,7 @@ export function depthFirstSearch(grid: number[][], start: number[]) {
                 }
         })
     }
-    // let g = animatePath(grid, final_path)
-    let g = instantAnimatePath(grid, final_path)
+    let g = animatePath(grid, final_path)
     animation.push(...g)
     return(animation)
 }
@@ -150,7 +149,7 @@ export function dijkstrasAlgorithm (grid: number[][], start: number[]) {
         })
         unvisited.delete(cell_id)
     }
-    let g = instantAnimatePath(grid, final_path)
+    let g = animatePath(grid, final_path)
     animation.push(...g)
     return(animation)
 }
@@ -250,7 +249,7 @@ export function aStarSearch(grid: number[][], start: number[]) {
         })
         unvisited.delete(cell_id)
     }
-    let g = instantAnimatePath(grid, final_path)
+    let g = animatePath(grid, final_path)
     animation.push(...g)
     return(animation)
 }
