@@ -72,10 +72,17 @@ function _shiftStart(event: MouseEvent): void {
         x > c*CELL_WIDTH && x < c*CELL_WIDTH + CELL_WIDTH &&
         myGlobal.grid[r][c] !== 3
         ) {
+
           myGlobal.grid[myGlobal.start[1]][myGlobal.start[0]] = 0
           myGlobal.grid[r][c] = 2
           myGlobal.start = [c,r]
-          updateCanvas(myGlobal.grid, myGlobal.ctx)
+          if (!myGlobal.isRunning && myGlobal.animation.length !== 0) {
+            algorithmSelectFunction()
+            myGlobal.i = myGlobal.animation.length - 1
+            updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx)
+          } else {
+            updateCanvas(myGlobal.grid, myGlobal.ctx)
+          }
         }
     })
   })
@@ -310,7 +317,7 @@ function algorithmSelectFunction () {
 
 function mainLoop() {
   function main() {
-    console.log(myGlobal.i, myGlobal.animation.length, myGlobal.animation)
+    console.log(myGlobal.i, myGlobal.animation.length, myGlobal. isRunning, myGlobal.animation)
     if (myGlobal.isRunning) {
       if (myGlobal.animation.length !== 0) {
 
