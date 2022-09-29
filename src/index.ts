@@ -1,4 +1,3 @@
-import * as cons from './constants';
 import { aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm } from './algorithms';
 
 
