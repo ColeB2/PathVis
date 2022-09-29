@@ -1,4 +1,3 @@
-import * as cons from "./constants.js";
 import {aStarSearch, breadthFirstSearch, depthFirstSearch, dijkstrasAlgorithm} from "./algorithms.js";
 function updateCanvas(arr, context) {
   context.clearRect(0, 0, myGlobal.canvas.width, myGlobal.canvas.height);
@@ -31,7 +30,7 @@ function updateCanvas(arr, context) {
   });
 }
 function mouseClick() {
-  cons.CANVAS.addEventListener("click", (event) => {
+  myGlobal.canvas.addEventListener("click", (event) => {
     const x = event.pageX - myGlobal.canvasLeft;
     const y = event.pageY - myGlobal.canvasTop;
     const CELL_WIDTH = myGlobal.cellWidth;
@@ -55,7 +54,13 @@ function _shiftStart(event) {
         myGlobal.grid[myGlobal.start[1]][myGlobal.start[0]] = 0;
         myGlobal.grid[r][c] = 2;
         myGlobal.start = [c, r];
-        updateCanvas(myGlobal.grid, myGlobal.ctx);
+        if (!myGlobal.isRunning && myGlobal.animation.length !== 0) {
+          algorithmSelectFunction();
+          myGlobal.i = myGlobal.animation.length - 1;
+          updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx);
+        } else {
+          updateCanvas(myGlobal.grid, myGlobal.ctx);
+        }
       }
     });
   });
@@ -70,7 +75,13 @@ function _shiftEnd(event) {
         myGlobal.grid[myGlobal.end[1]][myGlobal.end[0]] = 0;
         myGlobal.grid[r][c] = 3;
         myGlobal.end = [c, r];
-        updateCanvas(myGlobal.grid, myGlobal.ctx);
+        if (!myGlobal.isRunning && myGlobal.animation.length !== 0) {
+          algorithmSelectFunction();
+          myGlobal.i = myGlobal.animation.length - 1;
+          updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx);
+        } else {
+          updateCanvas(myGlobal.grid, myGlobal.ctx);
+        }
       }
     });
   });
@@ -156,7 +167,8 @@ function clearSearch(grid) {
 }
 function handleReset() {
   myGlobal.isRunning = false;
-  myGlobal.generatorAlgo = null;
+  myGlobal.i = 0;
+  myGlobal.animation = [];
   myGlobal.algoSelected = false;
   pauseButton.innerText = "Start";
   pauseButton.classList.remove("button-paused");
@@ -179,9 +191,11 @@ function pauseLoop() {
   if (myGlobal.isRunning) {
     pauseButton.innerText = "Start";
     pauseButton.classList.remove("button-paused");
+    algorithmSelectMenu.disabled = false;
   } else {
     pauseButton.innerText = "Pause";
     pauseButton.classList.add("button-paused");
+    algorithmSelectMenu.disabled = true;
     algorithmSelectFunction();
   }
   myGlobal.isRunning = !myGlobal.isRunning;
@@ -189,6 +203,12 @@ function pauseLoop() {
 }
 const pauseButton = document.getElementById("pause");
 pauseButton?.addEventListener("click", pauseLoop, false);
+function instantFunc() {
+  myGlobal.i = myGlobal.animation.length - 1;
+  updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx);
+}
+const instantButton = document.getElementById("instant");
+instantButton?.addEventListener("click", instantFunc, false);
 function changeSlider() {
   delaySliderOutput.innerHTML = delaySlider.value;
   myGlobal.delay = delaySlider.value;
@@ -200,7 +220,7 @@ delaySlider.addEventListener("input", changeSlider, false);
 function colorChoice(ev) {
   const element = ev.target;
   myGlobal.colors[element.id.toString()] = element.value;
-  updateCanvas(myGlobal.grid, cons.CTX);
+  updateCanvas(myGlobal.grid, myGlobal.ctx);
 }
 const colorSelects = ["openColor", "searchColor", "startColor", "endColor", "pathColor", "wallColor"];
 function createColorSelects() {
@@ -212,7 +232,8 @@ function createColorSelects() {
 }
 function selectAlgo(algo, grid) {
   if (algo) {
-    myGlobal.generatorAlgo = algo(grid, myGlobal.start);
+    clearGame();
+    myGlobal.animation = algo(grid, myGlobal.start);
   }
 }
 const algoDict = {
@@ -224,7 +245,7 @@ const algoDict = {
 const algorithmSelectMenu = document.getElementById("algorithm-menu");
 function algorithmSelectFunction() {
   let option = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value];
-  if (myGlobal.algoSelected === false || option != myGlobal.algoSelected) {
+  if (myGlobal.animation.length >= 1 || option != myGlobal.algoSelected) {
     myGlobal.algoSelected = option;
     selectAlgo(myGlobal.algoSelected, myGlobal.grid);
   }
@@ -232,17 +253,18 @@ function algorithmSelectFunction() {
 function mainLoop() {
   function main() {
     if (myGlobal.isRunning) {
-      if (myGlobal.generatorAlgo !== null) {
-        let algoResults = myGlobal.generatorAlgo.next();
-        if (!algoResults.done) {
-          let [newGrid, path] = algoResults["value"];
-          updateCanvas(newGrid, myGlobal.ctx);
+      if (myGlobal.animation.length !== 0) {
+        if (myGlobal.i !== myGlobal.animation.length) {
+          let newGrid = myGlobal.animation[myGlobal.i];
+          myGlobal.grid = newGrid;
+          updateCanvas(myGlobal.grid, myGlobal.ctx);
+          myGlobal.i += 1;
           setTimeout(() => {
             window.requestAnimationFrame(main);
           }, myGlobal.delay);
         } else {
-          myGlobal.generatorAlgo = null;
           myGlobal.algoSelected = false;
+          myGlobal.i = 0;
           pauseLoop();
         }
       }
@@ -268,9 +290,10 @@ myGlobal.end = [myGlobal.gridWidth - 2, myGlobal.defaultStartEndHeight];
 myGlobal.grid = createGrid(myGlobal.gridHeight, myGlobal.gridWidth, myGlobal.start, myGlobal.end);
 window.addEventListener("resize", updateGlobalCanvas, false);
 myGlobal.isRunning = false;
-myGlobal.generatorAlgo = null;
 myGlobal.algoSelected = false;
 myGlobal.delay = delaySlider.value;
+myGlobal.i = 0;
+myGlobal.animation = [];
 mouseClick();
 mouseMovementControls();
 createColorSelects();
