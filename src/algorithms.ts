@@ -276,7 +276,7 @@ function animatePath(grid: number[][], path: number[][]) {
         const [x, y] = path[i];
         if (grid[y][x] === 1) {
             grid[y][x] = 5
-            return_grid.push(window.structuredClone(grid))
+            return_grid.push(copyGrid(grid))
             
         }
     }
@@ -291,5 +291,5 @@ function animatePath(grid: number[][], path: number[][]) {
             
         }
     }
-    return [window.structuredClone(grid)]
+    return [copyGrid(grid)]
   }
