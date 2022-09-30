@@ -15,6 +15,15 @@ function inBounds(x: number, y: number, gridWidth:number, gridHeight: number) {
     return false;
 }
 
+function copyGrid(grid: number[][]): number[][] {
+    return grid.map((row) => {
+        return row.map((cell) => {
+            return cell
+        })
+    })
+}
+
+
 export function depthFirstSearch(grid: number[][], start: number[]) {
     const gridWidth = grid[0].length
     const gridHeight = grid.length
@@ -35,7 +44,7 @@ export function depthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        animation.push(window.structuredClone(grid))
+        animation.push(copyGrid(grid))
 
         DFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -76,7 +85,7 @@ export function breadthFirstSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        animation.push(window.structuredClone(grid))
+        animation.push(copyGrid(grid))
 
         BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -134,7 +143,7 @@ export function dijkstrasAlgorithm (grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        animation.push(window.structuredClone(grid))
+        animation.push(copyGrid(grid))
 
         BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
@@ -223,7 +232,7 @@ export function aStarSearch(grid: number[][], start: number[]) {
             grid[cell_y][cell_x] = 1
         }
         
-        animation.push(window.structuredClone(grid))
+        animation.push(copyGrid(grid))
 
         BFS_DIRS.forEach(([dir_x, dir_y]) => {
             const [new_x, new_y] = [cell_x+dir_x, cell_y+dir_y]
