@@ -282,14 +282,3 @@ function animatePath(grid: number[][], path: number[][]) {
     }
     return return_grid
   }
-
-  function instantAnimatePath(grid: number[][], path: number[][]) {
-    for(let i = 0; i < path.length; i++) {
-        const [x, y] = path[i];
-        if (grid[y][x] === 1) {
-            grid[y][x] = 5
-            
-        }
-    }
-    return [copyGrid(grid)]
-  }
