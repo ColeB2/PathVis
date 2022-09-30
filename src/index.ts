@@ -243,8 +243,8 @@ function pauseLoop() {
   } else {
     pauseButton.innerText = 'Pause';
     pauseButton.classList.add('button-paused');
-    algorithmSelectMenu.disabled = true
     algorithmSelectFunction();
+    algorithmSelectMenu.disabled = true
   }
   myGlobal.isRunning = !myGlobal.isRunning;
   mainLoop();
