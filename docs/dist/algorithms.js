@@ -12,6 +12,13 @@ function inBounds(x, y, gridWidth, gridHeight) {
   }
   return false;
 }
+function copyGrid(grid) {
+  return grid.map((row) => {
+    return row.map((cell) => {
+      return cell;
+    });
+  });
+}
 export function depthFirstSearch(grid, start) {
   const gridWidth = grid[0].length;
   const gridHeight = grid.length;
@@ -27,7 +34,7 @@ export function depthFirstSearch(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    animation.push(window.structuredClone(grid));
+    animation.push(copyGrid(grid));
     DFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_path = path.slice();
@@ -57,7 +64,7 @@ export function breadthFirstSearch(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    animation.push(window.structuredClone(grid));
+    animation.push(copyGrid(grid));
     BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_cell_id = new_y * gridWidth + new_x;
@@ -100,7 +107,7 @@ export function dijkstrasAlgorithm(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    animation.push(window.structuredClone(grid));
+    animation.push(copyGrid(grid));
     BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_cell_id = new_y * gridWidth + new_x;
@@ -167,7 +174,7 @@ export function aStarSearch(grid, start) {
     } else if (grid[cell_y][cell_x] !== 2 && grid[cell_y][cell_x] !== 4) {
       grid[cell_y][cell_x] = 1;
     }
-    animation.push(window.structuredClone(grid));
+    animation.push(copyGrid(grid));
     BFS_DIRS.forEach(([dir_x, dir_y]) => {
       const [new_x, new_y] = [cell_x + dir_x, cell_y + dir_y];
       const new_cell_id = new_y * gridWidth + new_x;
@@ -195,17 +202,8 @@ function animatePath(grid, path) {
     const [x, y] = path[i];
     if (grid[y][x] === 1) {
       grid[y][x] = 5;
-      return_grid.push(window.structuredClone(grid));
+      return_grid.push(copyGrid(grid));
     }
   }
   return return_grid;
-}
-function instantAnimatePath(grid, path) {
-  for (let i = 0; i < path.length; i++) {
-    const [x, y] = path[i];
-    if (grid[y][x] === 1) {
-      grid[y][x] = 5;
-    }
-  }
-  return [window.structuredClone(grid)];
 }
