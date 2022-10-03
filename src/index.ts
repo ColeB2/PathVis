@@ -39,22 +39,20 @@ function updateCanvas(arr: number[][], context: CanvasRenderingContext2D): void 
 
 
 // Mouse Controls
-function mouseClick(): void {
-  myGlobal.canvas.addEventListener('click', (event: MouseEvent) => {
-    const x = event.pageX - myGlobal.canvasLeft;
-    const y = event.pageY - myGlobal.canvasTop;
-    const CELL_WIDTH = myGlobal.cellWidth
+function mouseClick(event: MouseEvent): void {
+  const x = event.pageX - myGlobal.canvasLeft;
+  const y = event.pageY - myGlobal.canvasTop;
+  const CELL_WIDTH = myGlobal.cellWidth;
 
-    myGlobal.grid.forEach((row: [], r: number) => {
-      row.forEach((col: number, c: number) => {
-        if (
-          y > r*CELL_WIDTH && y < (r*CELL_WIDTH)+CELL_WIDTH-2 &&
-          x > c*CELL_WIDTH && x < (c*CELL_WIDTH)+CELL_WIDTH-2 &&
-          myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3)  {
-            myGlobal.grid[r][c] = (myGlobal.grid[r][c] === 0 ? 4 : 0)
-            updateCanvas(myGlobal.grid, myGlobal.ctx)
-        }
-      })
+  myGlobal.grid.forEach((row: [], r: number) => {
+    row.forEach((col: number, c: number) => {
+      if (
+        y > r*CELL_WIDTH && y < (r*CELL_WIDTH)+CELL_WIDTH-2 &&
+        x > c*CELL_WIDTH && x < (c*CELL_WIDTH)+CELL_WIDTH-2 &&
+        myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3)  {
+          myGlobal.grid[r][c] = (myGlobal.grid[r][c] === 0 ? 4 : 0)
+          updateCanvas(myGlobal.grid, myGlobal.ctx)
+      }
     })
   })
 }
@@ -149,22 +147,31 @@ function endShiftEnd(): void {
   myGlobal.canvas.removeEventListener('mouseup', endShiftEnd)
 }
 
+function handleMouseClickDrag(event: MouseEvent): void {
+  const x = Math.floor((event.pageX - myGlobal.canvasLeft) / myGlobal.cellWidth)
+  const y = Math.floor((event.pageY - myGlobal.canvasTop)/ myGlobal.cellWidth)
+  event.stopPropagation();
+  if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
+    myGlobal.canvas.addEventListener('mousemove', _shiftStart);
+    myGlobal.canvas.addEventListener('mouseup', endShiftStart);
+  } else if (x === myGlobal.end[0] && y === myGlobal.end[1] ) {
+    myGlobal.canvas.addEventListener('mousemove', _shiftEnd);
+    myGlobal.canvas.addEventListener('mouseup', endShiftEnd);
+  } else {
+    myGlobal.canvas.addEventListener('mousemove', mouseMove);
+    myGlobal.canvas.addEventListener('mouseup', endWallPlacement);
+  }
+}
+
+function removeMouseControls(): void {
+  myGlobal.canvas.removeEventListener('mousedown', handleMouseClickDrag)
+  myGlobal.canvas.removeEventListener('mouseUp', removeMouseControls)
+  myGlobal.canvas.removeEventListener('click', mouseClick)
+}
+
 function mouseMovementControls(): void {    
-  myGlobal.canvas.addEventListener('mousedown', (event: MouseEvent) => {
-    const x = Math.floor((event.pageX - myGlobal.canvasLeft) / myGlobal.cellWidth)
-    const y = Math.floor((event.pageY - myGlobal.canvasTop)/ myGlobal.cellWidth)
-    event.stopPropagation();
-    if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
-      myGlobal.canvas.addEventListener('mousemove', _shiftStart);
-      myGlobal.canvas.addEventListener('mouseup', endShiftStart);
-    } else if (x === myGlobal.end[0] && y === myGlobal.end[1] ) {
-      myGlobal.canvas.addEventListener('mousemove', _shiftEnd);
-      myGlobal.canvas.addEventListener('mouseup', endShiftEnd);
-    } else {
-      myGlobal.canvas.addEventListener('mousemove', mouseMove);
-      myGlobal.canvas.addEventListener('mouseup', endWallPlacement);
-    }
-  })
+  myGlobal.canvas.addEventListener('mousedown', handleMouseClickDrag, false)
+  myGlobal.canvas.addEventListener('click', mouseClick)
 }
 
 
@@ -240,11 +247,13 @@ function pauseLoop() {
     pauseButton.innerText = 'Start';
     pauseButton.classList.remove('button-paused');
     algorithmSelectMenu.disabled = false
+    mouseMovementControls();
   } else {
     pauseButton.innerText = 'Pause';
     pauseButton.classList.add('button-paused');
     algorithmSelectFunction();
     algorithmSelectMenu.disabled = true
+    removeMouseControls()
   }
   myGlobal.isRunning = !myGlobal.isRunning;
   mainLoop();
@@ -386,8 +395,7 @@ myGlobal.animation = []
 
 
 
-//Mouse controls
-mouseClick()
+//Initialize Mouse controls
 mouseMovementControls();
 
 // Initial Start Up
