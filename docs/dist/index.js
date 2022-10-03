@@ -29,18 +29,16 @@ function updateCanvas(arr, context) {
     });
   });
 }
-function mouseClick() {
-  myGlobal.canvas.addEventListener("click", (event) => {
-    const x = event.pageX - myGlobal.canvasLeft;
-    const y = event.pageY - myGlobal.canvasTop;
-    const CELL_WIDTH = myGlobal.cellWidth;
-    myGlobal.grid.forEach((row, r) => {
-      row.forEach((col, c) => {
-        if (y > r * CELL_WIDTH && y < r * CELL_WIDTH + CELL_WIDTH - 2 && x > c * CELL_WIDTH && x < c * CELL_WIDTH + CELL_WIDTH - 2 && myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3) {
-          myGlobal.grid[r][c] = myGlobal.grid[r][c] === 0 ? 4 : 0;
-          updateCanvas(myGlobal.grid, myGlobal.ctx);
-        }
-      });
+function mouseClick(event) {
+  const x = event.pageX - myGlobal.canvasLeft;
+  const y = event.pageY - myGlobal.canvasTop;
+  const CELL_WIDTH = myGlobal.cellWidth;
+  myGlobal.grid.forEach((row, r) => {
+    row.forEach((col, c) => {
+      if (y > r * CELL_WIDTH && y < r * CELL_WIDTH + CELL_WIDTH - 2 && x > c * CELL_WIDTH && x < c * CELL_WIDTH + CELL_WIDTH - 2 && myGlobal.grid[r][c] !== 2 && myGlobal.grid[r][c] !== 3) {
+        myGlobal.grid[r][c] = myGlobal.grid[r][c] === 0 ? 4 : 0;
+        updateCanvas(myGlobal.grid, myGlobal.ctx);
+      }
     });
   });
 }
@@ -111,22 +109,29 @@ function endShiftEnd() {
   myGlobal.canvas.removeEventListener("mousemove", _shiftEnd);
   myGlobal.canvas.removeEventListener("mouseup", endShiftEnd);
 }
+function handleMouseClickDrag(event) {
+  const x = Math.floor((event.pageX - myGlobal.canvasLeft) / myGlobal.cellWidth);
+  const y = Math.floor((event.pageY - myGlobal.canvasTop) / myGlobal.cellWidth);
+  event.stopPropagation();
+  if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
+    myGlobal.canvas.addEventListener("mousemove", _shiftStart);
+    myGlobal.canvas.addEventListener("mouseup", endShiftStart);
+  } else if (x === myGlobal.end[0] && y === myGlobal.end[1]) {
+    myGlobal.canvas.addEventListener("mousemove", _shiftEnd);
+    myGlobal.canvas.addEventListener("mouseup", endShiftEnd);
+  } else {
+    myGlobal.canvas.addEventListener("mousemove", mouseMove);
+    myGlobal.canvas.addEventListener("mouseup", endWallPlacement);
+  }
+}
+function removeMouseControls() {
+  myGlobal.canvas.removeEventListener("mousedown", handleMouseClickDrag);
+  myGlobal.canvas.removeEventListener("mouseUp", removeMouseControls);
+  myGlobal.canvas.removeEventListener("click", mouseClick);
+}
 function mouseMovementControls() {
-  myGlobal.canvas.addEventListener("mousedown", (event) => {
-    const x = Math.floor((event.pageX - myGlobal.canvasLeft) / myGlobal.cellWidth);
-    const y = Math.floor((event.pageY - myGlobal.canvasTop) / myGlobal.cellWidth);
-    event.stopPropagation();
-    if (x === myGlobal.start[0] && y === myGlobal.start[1]) {
-      myGlobal.canvas.addEventListener("mousemove", _shiftStart);
-      myGlobal.canvas.addEventListener("mouseup", endShiftStart);
-    } else if (x === myGlobal.end[0] && y === myGlobal.end[1]) {
-      myGlobal.canvas.addEventListener("mousemove", _shiftEnd);
-      myGlobal.canvas.addEventListener("mouseup", endShiftEnd);
-    } else {
-      myGlobal.canvas.addEventListener("mousemove", mouseMove);
-      myGlobal.canvas.addEventListener("mouseup", endWallPlacement);
-    }
-  });
+  myGlobal.canvas.addEventListener("mousedown", handleMouseClickDrag, false);
+  myGlobal.canvas.addEventListener("click", mouseClick);
 }
 function createGrid(height, width, start, end) {
   const grid = [];
@@ -192,11 +197,13 @@ function pauseLoop() {
     pauseButton.innerText = "Start";
     pauseButton.classList.remove("button-paused");
     algorithmSelectMenu.disabled = false;
+    mouseMovementControls();
   } else {
     pauseButton.innerText = "Pause";
     pauseButton.classList.add("button-paused");
     algorithmSelectFunction();
     algorithmSelectMenu.disabled = true;
+    removeMouseControls();
   }
   myGlobal.isRunning = !myGlobal.isRunning;
   mainLoop();
@@ -294,7 +301,6 @@ myGlobal.algoSelected = false;
 myGlobal.delay = delaySlider.value;
 myGlobal.i = 0;
 myGlobal.animation = [];
-mouseClick();
 mouseMovementControls();
 createColorSelects();
 updateCanvas(myGlobal.grid, myGlobal.ctx);
