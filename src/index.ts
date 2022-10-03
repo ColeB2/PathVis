@@ -326,18 +326,21 @@ function algorithmSelectFunction () {
 }
 
 function mainLoop() {
-  function main() {
+  function main(timestamp: DOMHighResTimeStamp) {
     if (myGlobal.isRunning) {
       if (myGlobal.animation.length !== 0) {
+        const drawStart = (timestamp)
+        const diff = drawStart - myGlobal.startTime
 
         if (myGlobal.i !== myGlobal.animation.length) {
-          let newGrid = myGlobal.animation[myGlobal.i]
-          myGlobal.grid = newGrid
-          updateCanvas(myGlobal.grid, myGlobal.ctx)
-          myGlobal.i += 1
-          setTimeout ( () => {
-            window.requestAnimationFrame(main);
-          }, myGlobal.delay)
+          if (diff > myGlobal.delay) {
+            let newGrid = myGlobal.animation[myGlobal.i]
+            myGlobal.grid = newGrid
+            updateCanvas(myGlobal.grid, myGlobal.ctx)
+            myGlobal.i += 1
+            myGlobal.startTime = performance.now()
+          }
+          window.requestAnimationFrame(main)
         } else {
           myGlobal.algoSelected = false;
           myGlobal.i = 0
@@ -383,7 +386,7 @@ myGlobal.defaultStartEndHeight = Math.floor(myGlobal.gridHeight/2) - 1
 myGlobal.start = [1, myGlobal.defaultStartEndHeight]
 myGlobal.end = [myGlobal.gridWidth-2, myGlobal.defaultStartEndHeight]
 myGlobal.grid = createGrid(myGlobal.gridHeight, myGlobal.gridWidth, myGlobal.start, myGlobal.end);
-
+myGlobal.startTime = performance.now()
 
 window.addEventListener('resize', updateGlobalCanvas, false)
 
