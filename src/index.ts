@@ -298,7 +298,7 @@ function colorChoice(this:HTMLInputElement, ev:Event) {
 const colorSelects = ["openColor", "searchColor", "startColor", "endColor", "pathColor", "wallColor"]
 function createColorSelects() {
 	colorSelects.forEach((color) => {
-		let newSelect: any = document.getElementById(color)
+		let newSelect = document.getElementById(color) as HTMLInputElement
 		newSelect.addEventListener('input', colorChoice, false)
 		myGlobal.colors[color] = newSelect.value
     
@@ -306,7 +306,7 @@ function createColorSelects() {
 }
 
 
-function selectAlgo(algo: any, grid: number[][]) {
+function selectAlgo(algo: Function, grid: number[][]) {
 	if (algo) {
     clearGame()
     myGlobal.animation = algo(grid, myGlobal.start)
