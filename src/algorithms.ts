@@ -247,7 +247,7 @@ export function aStarSearch(grid: number[][], start: number[]) {
                     Math.abs(new_x - end[0]) +
                     Math.abs(new_y - end[1])
                     )
-                const h_n = distanceFromEnd * 2
+                const h_n = distanceFromEnd * 1.1
                 const cost = g_n + h_n
                 
                 
