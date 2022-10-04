@@ -216,12 +216,17 @@ function clearSearch(grid: number[][]): void {
 }
 
 function handleReset(): void {
+  if (myGlobal.isRunning) {
+    pauseButton.textContent = 'Start'
+    pauseButton.classList.remove('button-paused')
+    algorithmSelectMenu.disabled = false
+    mouseMovementControls();
+  }
   myGlobal.isRunning = false;
   myGlobal.i = 0
   myGlobal.animation = [];
   myGlobal.algoSelected = false;
-  pauseButton.innerText = 'Start'
-  pauseButton.classList.remove('button-paused')
+  
 }
 
 function clearGame(): void {
@@ -244,12 +249,12 @@ clearButton?.addEventListener('click', clearGame, false)
 
 function pauseLoop() {
   if (myGlobal.isRunning) {
-    pauseButton.innerText = 'Start';
+    pauseButton.textContent = 'Start';
     pauseButton.classList.remove('button-paused');
     algorithmSelectMenu.disabled = false
     mouseMovementControls();
   } else {
-    pauseButton.innerText = 'Pause';
+    pauseButton.textContent = 'Pause';
     pauseButton.classList.add('button-paused');
     algorithmSelectFunction();
     algorithmSelectMenu.disabled = true
@@ -319,7 +324,7 @@ const algoDict:any = {
 const algorithmSelectMenu: any = document.getElementById('algorithm-menu') //any
 function algorithmSelectFunction () {
   let option: any = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value]
-  if (myGlobal.animation.length >= 1 || option != myGlobal.algoSelected) {
+  if (option != myGlobal.algoSelected) {
     myGlobal.algoSelected = option
     selectAlgo(myGlobal.algoSelected, myGlobal.grid)
   }
