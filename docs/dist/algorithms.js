@@ -180,7 +180,7 @@ export function aStarSearch(grid, start) {
       const new_cell_id = new_y * gridWidth + new_x;
       if (inBounds(new_x, new_y, gridWidth, gridHeight) && unvisited.has(new_cell_id) && grid[new_y][new_x] !== 4) {
         const distanceFromEnd = Math.abs(new_x - end[0]) + Math.abs(new_y - end[1]);
-        const h_n = distanceFromEnd * 2;
+        const h_n = distanceFromEnd * 1.1;
         const cost = g_n + h_n;
         const new_path = path.slice();
         new_path.push([new_x, new_y]);
