@@ -171,12 +171,16 @@ function clearSearch(grid) {
   });
 }
 function handleReset() {
+  if (myGlobal.isRunning) {
+    pauseButton.textContent = "Start";
+    pauseButton.classList.remove("button-paused");
+    algorithmSelectMenu.disabled = false;
+    mouseMovementControls();
+  }
   myGlobal.isRunning = false;
   myGlobal.i = 0;
   myGlobal.animation = [];
   myGlobal.algoSelected = false;
-  pauseButton.innerText = "Start";
-  pauseButton.classList.remove("button-paused");
 }
 function clearGame() {
   clearSearch(myGlobal.grid);
@@ -194,12 +198,12 @@ const clearButton = document.getElementById("clear");
 clearButton?.addEventListener("click", clearGame, false);
 function pauseLoop() {
   if (myGlobal.isRunning) {
-    pauseButton.innerText = "Start";
+    pauseButton.textContent = "Start";
     pauseButton.classList.remove("button-paused");
     algorithmSelectMenu.disabled = false;
     mouseMovementControls();
   } else {
-    pauseButton.innerText = "Pause";
+    pauseButton.textContent = "Pause";
     pauseButton.classList.add("button-paused");
     algorithmSelectFunction();
     algorithmSelectMenu.disabled = true;
@@ -252,7 +256,7 @@ const algoDict = {
 const algorithmSelectMenu = document.getElementById("algorithm-menu");
 function algorithmSelectFunction() {
   let option = algoDict[algorithmSelectMenu.options[algorithmSelectMenu.selectedIndex].value];
-  if (myGlobal.animation.length >= 1 || option != myGlobal.algoSelected) {
+  if (option != myGlobal.algoSelected) {
     myGlobal.algoSelected = option;
     selectAlgo(myGlobal.algoSelected, myGlobal.grid);
   }
