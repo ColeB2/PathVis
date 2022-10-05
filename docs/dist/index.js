@@ -215,8 +215,10 @@ function pauseLoop() {
 const pauseButton = document.getElementById("pause");
 pauseButton?.addEventListener("click", pauseLoop, false);
 function instantFunc() {
-  myGlobal.i = myGlobal.animation.length - 1;
-  updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx);
+  if (myGlobal.animation.length != 0) {
+    myGlobal.i = myGlobal.animation.length - 1;
+    updateCanvas(myGlobal.animation[myGlobal.i], myGlobal.ctx);
+  }
 }
 const instantButton = document.getElementById("instant");
 instantButton?.addEventListener("click", instantFunc, false);
